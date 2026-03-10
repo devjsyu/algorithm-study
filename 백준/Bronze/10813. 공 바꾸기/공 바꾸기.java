@@ -1,43 +1,38 @@
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.StringTokenizer;
 
 public class Main {
-    public static void main(String[] args) throws IOException {
-        // 입력
-        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        String[] input = br.readLine().split(" ");
+    static BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+    static StringTokenizer st;
 
-        // 변수 할당
-        int n = Integer.parseInt(input[0]);
-        int m = Integer.parseInt(input[1]);
+    static int nextInt() throws IOException {
+        while (st == null || !st.hasMoreTokens()) {
+            st = new StringTokenizer(br.readLine());
+        }
+        return Integer.parseInt(st.nextToken());
+    }
+
+    public static void main(String[] args) throws IOException {
+        int n = nextInt();
+        int m = nextInt();
 
         int[] baskets = new int[n];
 
-        // 바구니 초기화
         for (int i = 0; i < n; i++) {
-            baskets[i] = i + 1; // 인덱스 + 1
+            baskets[i] = i + 1; // 바구니 번호는 1번부터 시작하므로 초기값을 i+1로 설정
         }
 
-        // 변수 선언
-        int i;
-        int j;
-        int temp;
-
-        // 반복문
         for (int k = 0; k < m; k++) {
-            input = br.readLine().split(" ");
-            // 인덱스 기준으로 계산하기 위해 -1 보정
-            i = Integer.parseInt(input[0]) - 1;
-            j = Integer.parseInt(input[1]) - 1;
+            int i = nextInt() - 1;
+            int j = nextInt() - 1;
 
-            // 교환
-            temp = baskets[i];
+            int temp = baskets[i];
             baskets[i] = baskets[j];
             baskets[j] = temp;
         }
 
-        // 출력
         StringBuilder sb = new StringBuilder();
         for (int k = 0; k < n; k++) {
             sb.append(baskets[k]);
