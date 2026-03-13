@@ -8,9 +8,11 @@ public class QuickSort {
     }
 
     private static void quickSort(int[] arr, int low, int high) {
+        // base case
         if (low < high) {
             int pivot = partition(arr, low, high);
 
+            // recursive case
             quickSort(arr, low, pivot - 1);
             quickSort(arr, pivot + 1, high);
         }
