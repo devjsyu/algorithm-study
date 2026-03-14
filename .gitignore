@@ -30,3 +30,4 @@ bin/
 .DS_Store
 
 src/Main.java
+src/Solution.java
