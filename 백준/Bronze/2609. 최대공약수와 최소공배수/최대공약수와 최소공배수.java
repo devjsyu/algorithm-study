@@ -10,25 +10,24 @@ public class Main {
         int num1 = Integer.parseInt(st.nextToken());
         int num2 = Integer.parseInt(st.nextToken());
 
-        int multiplied = num1 * num2;
+        int gcd = getGCD(num1, num2);
+        int lcm = num1 / gcd * num2;
+        
+        System.out.println(gcd);
+        System.out.println(lcm);
+    }
 
-        if (num1 < num2) {
+    private static int getGCD(int num1, int num2) {
+        if (num2 > num1) {
             int temp = num1;
             num1 = num2;
             num2 = temp;
         }
 
-        while (num2 != 0) {
-            int remainder = num1 - num2 * (num1 / num2);
-            num1 = num2;
-            num2 = remainder;
+        if (num2  == 0) {
+            return num1;
+        } else {
+            return getGCD(num2, num1 % num2);
         }
-        int gcd = num1;
-        int lcm = multiplied / gcd;
-
-        StringBuilder sb = new StringBuilder();
-        sb.append(gcd).append('\n').append(lcm);
-
-        System.out.println(sb);
     }
 }
