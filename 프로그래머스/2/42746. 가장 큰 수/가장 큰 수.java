@@ -1,26 +1,19 @@
 import java.util.Arrays;
 import java.util.Comparator;
+import java.util.stream.Collectors;
 
 class Solution {
-    public static void main(String[] args) {
-        int[] arr = {1};
-        System.out.println(solution(arr));
-    }
-    public static String solution(int[] numbers) {
-        StringBuilder sb = new StringBuilder();
-        Arrays.stream(numbers)
-                .mapToObj(String::valueOf)
-                .sorted(new Comparator<String>() {
-                    @Override
-                    public int compare(String s1, String s2) {
-                        return Integer.parseInt(s2 + s1) - Integer.parseInt(s1 + s2);
-                    }
-                })
-                .forEach(sb::append);
-        String answer = sb.toString();
-        if (answer.startsWith("0")) {
-            answer = "0";
+    public String solution(int[] numbers) {
+        for (int number : numbers) {
+           if (number != 0) {
+               return Arrays.stream(numbers).mapToObj(String::valueOf).sorted(new Comparator<String>() {
+                   @Override
+                   public int compare(String s1, String s2) {
+                       return (s2+s1).compareTo(s1+s2);
+                   }
+               }).collect(Collectors.joining());       
+           }
         }
-        return answer;
+        return "0";
     }
 }
