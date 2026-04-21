@@ -2,32 +2,35 @@ import java.util.HashMap;
 
 class Solution {
     public int[] solution(String[] enroll, String[] referral, String[] seller, int[] amount) {
-        HashMap<String, String> userToBoss = new HashMap<>();
+        // 자료구조
+        HashMap<String, String> memberToReferral = new HashMap<>(); // 자식 - 부모 매핑
+        HashMap<String, Integer> memberToProfit = new HashMap<>(); // 회원 - 이익 매핑
 
-        // 회원 : 추천인 매핑
+        // 입력
         for (int i = 0; i < enroll.length; i++) {
-            userToBoss.put(enroll[i], referral[i]);
+            memberToReferral.put(enroll[i], referral[i]);
+            memberToProfit.put(enroll[i], 0);
         }
 
-        HashMap<String, Integer> userToProfit = new HashMap<>(); // 회원별 본인이 갖게 되는 돈 매핑
         for (int i = 0; i < seller.length; i++) {
-            String currentName = seller[i];
-            int money = amount[i] * 100;
+            // 1차 판매 이익 계산
+            int profit = amount[i] * 100 - amount[i] * 100 / 10;
+            memberToProfit.put(seller[i], memberToProfit.getOrDefault(seller[i], 0) + profit);
 
-            while (money > 0 && !currentName.equals("-")) {
-                // 당사자가 갖게 될 기존 돈의 90%을 가산한다.
-                userToProfit.put(currentName, userToProfit.getOrDefault(currentName, 0) + money - money / 10); 
-
-                currentName = userToBoss.get(currentName); // 당사자의 추천인을 다음 차수의 당사자로 갱신한다
-                money /= 10; // 다음 차수의 당사자에게 지급할 돈은 현재 당사자가 넘긴 돈이다.
+            // "-" 나올 때까지 추천인에게 판매 이익 일부 증여 반복
+            String currentMember = memberToReferral.get(seller[i]);
+            int currentProfit = amount[i] * 100 / 10;
+            while (!currentMember.equals("-") && currentProfit != 0) {
+                memberToProfit.put(currentMember, memberToProfit.getOrDefault(currentMember, 0) + currentProfit - currentProfit / 10);
+                currentMember = memberToReferral.get(currentMember);
+                currentProfit /= 10;
             }
         }
 
         int[] answer = new int[enroll.length];
         for (int i = 0; i < enroll.length; i++) {
-            answer[i] = userToProfit.getOrDefault(enroll[i], 0);
+            answer[i] = memberToProfit.get(enroll[i]);
         }
-
         return answer;
     }
 }
