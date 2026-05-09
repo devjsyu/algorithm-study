@@ -1,39 +1,43 @@
-import java.util.ArrayDeque;
 import java.util.HashMap;
+import java.util.Stack;
 
 class Solution {
     public int solution(String s) {
-        // 괄호 종류별 열고 닫는 문자 짝지어 저장하기
         HashMap<Character, Character> map = new HashMap<>();
-        map.put('(', ')');
-        map.put('[', ']');
-        map.put('{', '}');
+        map.put('}', '{');
+        map.put(')', '(');
+        map.put(']', '[');
 
+        // 회전을 위해 주어진 문자열 이어붙이기
+        String extendedString = s + s;
+        char[] charArray = extendedString.toCharArray();
         int length = s.length();
+        int answer = 0;
 
-        // 문자열 회전을 위해 동일한 문자열 연달아 이어붙이기
-        s += s;
-
-        int count = 0;
-        
-        // 문자열 회전을 위해 이중 반복문으로 순회하기 
-        A:for (int i = 0; i < length; i++) {
-            ArrayDeque<Character> stack = new ArrayDeque<>();
-            for (int j = i; j < i + length; j++) {
-                char c = s.charAt(j);
-                if (map.containsKey(c)) {
-                    stack.push(c);
-                } else if (stack.isEmpty() || map.get(stack.peek()) != c) {
-                    continue A;
-                } else {
-                    stack.pop();
-                }
-            }
-            if (stack.isEmpty()) {
-                count++;
-            }
+        // for-loop
+        for (int i = 0; i < s.length(); i++) {
+            if (isValidString(map, charArray, i, length)) answer++;
         }
 
-        return count;
+        return answer;
+    }
+
+    // 올바른 문자열 판별 메서드
+    public boolean isValidString(HashMap<Character, Character> map, char[] charArray, int start, int length) {
+        Stack<Character> stack = new Stack<>();
+
+        for (int i = start; i < start + length; i++) {
+            if (map.containsKey(charArray[i])) {
+                if (stack.isEmpty()) return false;
+                if (stack.peek() == map.get(charArray[i])) {
+                    stack.pop();
+                } else {
+                    return false;
+                }
+            } else {
+                stack.push(charArray[i]);
+            }
+        }
+        return stack.isEmpty();
     }
 }
