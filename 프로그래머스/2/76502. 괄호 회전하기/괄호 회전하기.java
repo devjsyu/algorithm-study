@@ -3,41 +3,35 @@ import java.util.Stack;
 
 class Solution {
     public int solution(String s) {
-        HashMap<Character, Character> map = new HashMap<>();
-        map.put('}', '{');
-        map.put(')', '(');
-        map.put(']', '[');
-
-        // 회전을 위해 주어진 문자열 이어붙이기
-        String extendedString = s + s;
-        char[] charArray = extendedString.toCharArray();
-        int length = s.length();
+        String extended = s + s;
+        char[] charArray = extended.toCharArray();
+        
         int answer = 0;
 
-        // for-loop
-        for (int i = 0; i < s.length(); i++) {
-            if (isValidString(map, charArray, i, length)) answer++;
-        }
-
-        return answer;
-    }
-
-    // 올바른 문자열 판별 메서드
-    public boolean isValidString(HashMap<Character, Character> map, char[] charArray, int start, int length) {
         Stack<Character> stack = new Stack<>();
+        HashMap<Character, Character> map = new HashMap<>();
+        map.put(')', '(');
+        map.put(']', '[');
+        map.put('}', '{');
 
-        for (int i = start; i < start + length; i++) {
-            if (map.containsKey(charArray[i])) {
-                if (stack.isEmpty()) return false;
-                if (stack.peek() == map.get(charArray[i])) {
+        outerLoop:
+        for (int i = 0; i < s.length(); i++) {
+            stack.clear();
+
+            for (int j = i; j < i + s.length(); j++) {
+                char c = charArray[j];
+                if (!map.containsKey(c)) {
+                    stack.push(c);
+                } else if (!stack.isEmpty() && stack.peek() == map.get(c)) {
                     stack.pop();
                 } else {
-                    return false;
+                    continue outerLoop;
                 }
-            } else {
-                stack.push(charArray[i]);
+            }
+            if (stack.isEmpty()) {
+                answer++;
             }
         }
-        return stack.isEmpty();
+        return answer;
     }
 }
