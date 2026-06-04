@@ -1,36 +1,46 @@
 import java.util.ArrayDeque;
-import java.util.Queue;
+import java.util.ArrayList;
+import java.util.Deque;
+import java.util.List;
 
 class Solution {
-    public static void main(String[] args) {
-        int bridge_length = 2;
-        int weight = 10;
-        int[] truck_weights = {7,4,5,6};
-        int solution = solution(bridge_length, weight, truck_weights);
-        System.out.println(solution);
-    }
-    public static int solution(int bridge_length, int weight, int[] truck_weights) {
-        Queue<Integer> bridge = new ArrayDeque<>();
-        int totalWeight = 0;
-        int seconds = 0;
+    public int solution(int bridge_length, int weight, int[] truck_weights) {
+        int weightsOnBridge = 0;
+        int truckCount = truck_weights.length;
+        int timePassed = 0;
 
-        for (int i = 0; i < truck_weights.length; i++) {
-            while (totalWeight + truck_weights[i] > weight) {
-                if (bridge.size() >= bridge_length) {
-                    int truckGone = bridge.poll();
-                    totalWeight -= truckGone;
-                } else {
-                    bridge.add(0);
-                    seconds++;
-                }
-            }
-            bridge.add(truck_weights[i]);
-            totalWeight += truck_weights[i];
-            seconds++;
+        Deque<Integer> bridgeQueue = new ArrayDeque<>();
+        for (int i = 0; i < bridge_length; i++) {
+            bridgeQueue.offer(0);
         }
 
-        seconds += bridge_length;
-        
-        return seconds;
+        Deque<Integer> waitingQueue = new ArrayDeque<>();
+        for (int i = 0; i < truck_weights.length; i++) {
+            waitingQueue.offer(truck_weights[i]);
+        }
+
+        List<Integer> trucksPassed = new ArrayList<>();
+
+        while (trucksPassed.size() != truckCount) {
+            // dequeue
+            int passed = bridgeQueue.poll();
+            if (passed != 0) {
+                trucksPassed.add(passed);
+                weightsOnBridge -= passed;
+            }
+
+            // enqueue
+            if (!waitingQueue.isEmpty() && weight >= weightsOnBridge + waitingQueue.peek()) {
+                int poll = waitingQueue.poll();
+                bridgeQueue.offer(poll);
+                weightsOnBridge += poll;
+            } else {
+                bridgeQueue.offer(0);
+            }
+
+            timePassed++;
+        }
+
+        return timePassed;
     }
 }
