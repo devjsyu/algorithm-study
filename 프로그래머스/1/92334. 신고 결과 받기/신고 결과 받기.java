@@ -1,36 +1,41 @@
-import java.util.*;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 
 class Solution {
     public int[] solution(String[] id_list, String[] report, int k) {
-        // 신고 받은 사람 : 신고 한 사람 목록
-        HashMap<String, Set<String>> defendantToPlaintiffs = new HashMap<>();
-        for (String log : report) {
-            StringTokenizer st = new StringTokenizer(log);
-            String plaintiff = st.nextToken();
-            String defendant = st.nextToken();
+        Map<String, Set<String>> reportedToReporters = new HashMap<>();
+        Map<String, Integer> reporterToMailCount = new HashMap<>();
 
-            if (!defendantToPlaintiffs.containsKey(defendant)) {
-                defendantToPlaintiffs.put(defendant, new HashSet<>());
+        for (int i = 0; i < report.length; i++) {
+            String[] split = report[i].split(" ");
+            String reporter = split[0];
+            String reported = split[1];
+
+            // 신고 받은 유저가 처음 등장할 경우 Map에 Key 추가
+            if (!reportedToReporters.containsKey(reported)) {
+                reportedToReporters.put(reported, new HashSet<>());
             }
-
-            defendantToPlaintiffs.get(defendant).add(plaintiff);
+            // 신고 받은 유저 Key에 대한 값으로써 Set에 신고 한 사람 추가
+            reportedToReporters.get(reported).add(reporter); // Set이기 때문에 신고가 중복되도 무관
         }
 
-        // 조건을 충족하는 경우 신고한 사람이 메일 받아야 할 개수 집계
-        HashMap<String, Integer> userToMailCount = new HashMap<>();
-        Set<Map.Entry<String, Set<String>>> entries = defendantToPlaintiffs.entrySet();
-        for (Map.Entry<String, Set<String>> entry : entries) {
-            if (entry.getValue().size() >= k) {
-                for (String plaintiff : entry.getValue()) {
-                    userToMailCount.put(plaintiff, userToMailCount.getOrDefault(plaintiff, 0) + 1);
-                }
+        // reportedToReporter 순회하면서 신고한 사람 수를 k와 비교
+        reportedToReporters.forEach((reported, reporters) -> {
+            // 신고 받은 사람이 정지 기준 초과로 인해 정지 받게 되는 경우
+            if (reporters.size() >= k) {
+                // 각 신고자에게 받을 메일 개수 1씩 추가 집계
+                reporters.forEach((reporter) -> {
+                    reporterToMailCount.put(reporter, reporterToMailCount.getOrDefault(reporter, 0) + 1);
+                });
             }
-        }
+        });
 
-        // 출력
+        // 신고자별 메일 받을 개수를 배열에 담기
         int[] answer = new int[id_list.length];
         for (int i = 0; i < id_list.length; i++) {
-            answer[i] = userToMailCount.getOrDefault(id_list[i], 0);
+            answer[i] = reporterToMailCount.getOrDefault(id_list[i], 0);
         }
 
         return answer;
