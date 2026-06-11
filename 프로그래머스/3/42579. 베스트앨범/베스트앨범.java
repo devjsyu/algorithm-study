@@ -1,31 +1,35 @@
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Stream;
+import java.util.*;
 
 class Solution {
     public int[] solution(String[] genres, int[] plays) {
-        HashMap<String, Integer> genreToPlaytime = new HashMap<>();
-        HashMap<String, List<int[]>> genreToIdAndPlaytime = new HashMap<>();
-        ArrayList<Integer> answer = new ArrayList<>();
+        Map<String, Integer> genresToPlayCount = new HashMap<>();
+        Map<String, List<int[]>> genresToPlayCountById = new HashMap<>();
 
         for (int i = 0; i < genres.length; i++) {
-            if (!genreToPlaytime.containsKey(genres[i])) {
-                genreToPlaytime.put(genres[i], 0);
-                genreToIdAndPlaytime.put(genres[i], new ArrayList<>());
+            genresToPlayCount.put(genres[i], genresToPlayCount.getOrDefault(genres[i], 0) + plays[i]);
+            if (!genresToPlayCountById.containsKey(genres[i])) {
+                genresToPlayCountById.put(genres[i], new ArrayList<>());
             }
-            genreToPlaytime.put(genres[i], genreToPlaytime.get(genres[i]) + plays[i]);
-            genreToIdAndPlaytime.get(genres[i]).add(new int[]{i, plays[i]});
+            genresToPlayCountById.get(genres[i]).add(new int[]{i, plays[i]});
         }
 
-        Stream<Map.Entry<String, Integer>> sorted = genreToPlaytime
-                .entrySet()
-                .stream()
-                .sorted((o1, o2) -> Integer.compare(o2.getValue(), o1.getValue()));
-        
-        sorted.forEach(o -> genreToIdAndPlaytime.get(o.getKey()).stream().sorted((o1, o2) -> Integer.compare(o2[1], o1[1])).limit(2).forEach(element -> answer.add(element[0])));
+        List<Map.Entry<String, Integer>> entries = new ArrayList<>(genresToPlayCount.entrySet());
+        entries.sort((a, b) -> b.getValue().compareTo(a.getValue()));
 
-        return answer.stream().mapToInt(Integer::intValue).toArray();
+        ArrayList<Integer> list = new ArrayList<>();
+        for (Map.Entry<String, Integer> entry : entries) {
+            genresToPlayCountById.get(entry.getKey()).stream().sorted(new Comparator<int[]>() {
+                @Override
+                public int compare(int[] o1, int[] o2) {
+                    if (o1[1] == o2[1]) {
+                        return o1[0] - o2[0]; // 고유번호 오름차순 정렬
+                    } else {
+                        return o2[1] - o1[1]; // 재생횟수 내림차순 정렬
+                    }
+                }
+            }).limit(2).forEach(o -> list.add(o[0]));
+        }
+
+        return list.stream().mapToInt(Integer::intValue).toArray();
     }
 }
