@@ -9,10 +9,12 @@ class Solution {
         Deque<Character> stack = new ArrayDeque<>();
 
         // 문자 변경
-        for (char c : s.strip().toLowerCase().toCharArray()) {
+        char[] charArray = s.toCharArray();
+        for (char c : charArray) {
             if (!Character.isLetterOrDigit(c)) {
                 continue;
             }
+            c = Character.toLowerCase(c);
             list.add(c);
             stack.push(c);
         }
