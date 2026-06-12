@@ -95,10 +95,15 @@ docs: BOJ 10810 update review notes
 |  |
 | ------- |
 | [0088-merge-sorted-array](https://github.com/devjsyu/algorithm-study/tree/master/0088-merge-sorted-array) |
+| [0125-valid-palindrome](https://github.com/devjsyu/algorithm-study/tree/master/0125-valid-palindrome) |
 | [0977-squares-of-a-sorted-array](https://github.com/devjsyu/algorithm-study/tree/main/0977-squares-of-a-sorted-array/) | Easy |
 ## Sorting
 |  |
 | ------- |
 | [0088-merge-sorted-array](https://github.com/devjsyu/algorithm-study/tree/master/0088-merge-sorted-array) |
 | [0977-squares-of-a-sorted-array](https://github.com/devjsyu/algorithm-study/tree/main/0977-squares-of-a-sorted-array/) | Easy |
+## String
+|  |
+| ------- |
+| [0125-valid-palindrome](https://github.com/devjsyu/algorithm-study/tree/master/0125-valid-palindrome) |
 <!---LeetCode Topics End-->
