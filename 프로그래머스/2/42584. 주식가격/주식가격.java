@@ -3,27 +3,27 @@ import java.util.Deque;
 
 class Solution {
     public int[] solution(int[] prices) {
-        Deque<Integer> stack = new ArrayDeque<>();
+        // 자료구조 초기화
+        Deque<Integer> indexPricesNeverDecreased = new ArrayDeque<>();
+        indexPricesNeverDecreased.push(0);
+
         int[] answer = new int[prices.length];
 
-        // 가격 배열 순회
-        for (int i = 0; i < prices.length; i++) {
-            // 가격 하락했을 경우
-            while (!stack.isEmpty() && prices[stack.peek()] > prices[i]) {
-                // 가격 하락한 시점 가격 인덱스
-                int priceDecreased = stack.pop();
-                // 정답 배열의 해당 인덱스에 가격 유지 기간 계산값 할당
-                answer[priceDecreased] = i - priceDecreased;
+        // prices 배열 순회하면서 이전 가격과 비교
+        for (int i = 1; i < prices.length; i++) {
+            // 가격 하락 한 경우
+            while (!indexPricesNeverDecreased.isEmpty() && prices[indexPricesNeverDecreased.peek()] > prices[i]) {
+                int indexPriceDecreased = indexPricesNeverDecreased.pop();
+                answer[indexPriceDecreased] = i - indexPriceDecreased; // 기간 계산
             }
 
             // 가격 하락 이외 경우
-            stack.push(i);
+            indexPricesNeverDecreased.push(i);
         }
 
-        // Stack에 남아있는 인덱스는 단 한번도 가격 하락하지 않은 경우
-        // 순회하면서 가격 유지 기간 계산
-        for (Integer i : stack) {
-            answer[i] = prices.length - 1 - i;
+        // 가격 하락하지 않았던 원소에 대해 순회하며 기간 계산
+        for (Integer i : indexPricesNeverDecreased) {
+            answer[i] = prices.length - i - 1;
         }
 
         return answer;
