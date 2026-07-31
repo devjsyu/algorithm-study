@@ -9,11 +9,11 @@ class Solution {
         // tickets[k]가 0이 될 때까지 반복
         int timePassed = 0;
         while (tickets[k] != 0) {
-            int polledIndex = ticketsToBuy.poll();
-            tickets[polledIndex]--;
-            if (tickets[polledIndex] > 0) {
-                ticketsToBuy.offer(polledIndex);
+            tickets[ticketsToBuy.peek()]--;
+            if (tickets[ticketsToBuy.peek()] > 0) {
+                ticketsToBuy.offer(ticketsToBuy.peek());
             }
+            ticketsToBuy.poll();
             timePassed++;
         }
         return timePassed;
