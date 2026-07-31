@@ -5,16 +5,12 @@ class Solution {
         for (int num : nums) {
             if (num == 1) {
                 count++;
+                largest = count > largest ? count : largest;
             } else {
-                if (largest < count) {
-                    largest = count;
-                }
-                count = 0; 
-            } 
+                count = 0;
+            }
         }
-        if (largest < count) {
-            largest = count;
-        }
+
         return largest;
     }
 }
