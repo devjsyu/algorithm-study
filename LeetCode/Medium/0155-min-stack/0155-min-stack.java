@@ -1,55 +1,33 @@
-import java.util.*;
+import java.util.ArrayDeque;
+import java.util.Deque;
 
 class MinStack {
-    private int size;
-    private int ptr;
-    private List<Integer> list;
-    private Deque<Integer> minStack = new ArrayDeque<>();
+    // int[] 배열 및 size, ptr와 같은 변수 직접 수동 관리하지 않고 ArrayDeque 사용
+    private Deque<Integer> stack = new ArrayDeque<>();
+    private Deque<Integer> minStack = new ArrayDeque<>(); // 최솟값 관리 보조 스택
 
-    public MinStack() {
-        this.size = 0;
-        this.ptr = -1;
-        this.list = new ArrayList<>();
-    }
-    
-    public void push(int value) {
-        if (this.size == 0) {
-            this.minStack.push(value);
-        } else if (!this.minStack.isEmpty() && this.minStack.peek() >= value) {
-            this.minStack.push(value);
+    public void push(int val) {
+        stack.push(val);
+        // 최솟값 스택이 비어있거나, 새 값이 현재 최솟값보다 작거나 같으면 추가
+        if (minStack.isEmpty() || val <= minStack.peek()) {
+            minStack.push(val);
         }
+    }
 
-        if (this.list.size() == size) {
-            this.list.add(value);
-            this.ptr++;
-        } else {
-            this.list.set(++ptr, value);
-        }
-        this.size++;
-    }
-    
     public void pop() {
-        if (this.list.get(ptr).equals(this.minStack.peek())) {
-            this.minStack.pop();
+        // 메인 스택에서 꺼내는 값과 최솟값 스택의 top이 같으면 함께 제거
+        // (Integer 객체이므로 .equals() 사용)
+        if (stack.peek().equals(minStack.peek())) {
+            minStack.pop();
         }
-        this.size--;
-        this.ptr--;
+        stack.pop();
     }
-    
+
     public int top() {
-        return this.list.get(ptr);        
+        return stack.peek();
     }
-    
+
     public int getMin() {
-        return this.minStack.peek();
+        return minStack.peek();
     }
 }
-
-/**
- * Your MinStack object will be instantiated and called as such:
- * MinStack obj = new MinStack();
- * obj.push(value);
- * obj.pop();
- * int param_3 = obj.top();
- * int param_4 = obj.getMin();
- */
