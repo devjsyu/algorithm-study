@@ -14,9 +14,7 @@ class Solution {
             if (nums[i] > pq.peek()) {
                 pq.poll();
                 pq.offer(nums[i]);
-            } else {
-                continue;
-            }
+            } 
         }
 
         return pq.poll();
