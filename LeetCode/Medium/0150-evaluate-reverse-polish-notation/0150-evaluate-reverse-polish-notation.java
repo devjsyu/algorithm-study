@@ -11,23 +11,14 @@ class Solution {
 
         Deque<Integer> stack = new ArrayDeque<>();
         for (String token : tokens) {
-            System.out.println("the current token is " + token);
             
             if (!operators.contains(token)) {
                 stack.push(Integer.parseInt(token));                
             } else if (stack.size() >= 2) {
-                System.out.println("the current stack size is " + stack.size());
-                
                 int operand1 = stack.pop();
-                System.out.println("the current operand1 is " + operand1);
-
-
                 int operand2 = stack.pop();
-                System.out.println("the current operand2 is " + operand2);
-
                 char operator = token.charAt(0);
                 int result = operateRPN(operand1, operand2, operator);
-                System.out.println("the current result is " + result);
                 
                 stack.push(result);
             }
