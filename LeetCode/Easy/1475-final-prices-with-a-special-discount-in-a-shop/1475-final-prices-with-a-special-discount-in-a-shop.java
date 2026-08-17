@@ -13,27 +13,18 @@ class Solution {
         // Stack 자료 구조 초기화
         Deque<Integer> stack = new ArrayDeque<>();
 
-        // 정답 배열 초기화
-        int[] finalPrices = new int[prices.length];
-
         // 주어진 배열 순회
         for (int i = 0; i < prices.length; i++) {
             // 조건 만족하는 경우
             while (!stack.isEmpty() && prices[stack.peek()] >= prices[i]) {
                 // 정답 배열의 해당 인덱스의 원소 값 결정
                 int popped = stack.pop();
-                finalPrices[popped] = prices[popped] - prices[i];
+                prices[popped] = prices[popped] - prices[i];
             }
  
             stack.push(i);
         }
 
-        // Stack에 남아있는 원소 순회하며 정답 배열의 나머지 원소 값 결정
-        while (!stack.isEmpty()) {
-            int popped = stack.pop();
-            finalPrices[popped] = prices[popped];
-        }
-
-        return finalPrices;
+        return prices;
     }
 }
