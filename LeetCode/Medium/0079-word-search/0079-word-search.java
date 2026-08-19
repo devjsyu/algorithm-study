@@ -5,7 +5,6 @@ class Solution {
     private boolean[][] visited;
     private Map<Cell, List<Cell>> map;
     private List<Cell> firstWordList;
-    private boolean isFound;
 
     public boolean exist(char[][] board, String word) {
         // 조기 반환 : word의 시작 문자가 있는지 탐색
@@ -50,20 +49,15 @@ class Solution {
         }
 
         this.word = word;
-        backtracking(new ArrayList<>());
-        
-        return isFound;
+        return backtracking(new ArrayList<>());
     }
 
     // 백트래킹
-    private void backtracking(List<Cell> path) {
-        if (isFound) return;
-
+    private boolean backtracking(List<Cell> path) {
         // 종료 조건 : 글자수 충족 여부
         assert path != null;
         if (path.size() == word.length()) {
-            isFound = true;
-            return;
+            return true;
         }
 
         List<Cell> cells;
@@ -88,15 +82,21 @@ class Solution {
             int i = cell.n;
             int j = cell.m;
             // 찾고자 하는 문자와 일치하고 방문한 적이 없다면
-            if (!isFound && cell.value == wordToSearch && !visited[i][j]) {
+            if (cell.value == wordToSearch && !visited[i][j]) {
                 path.add(cell);
                 visited[i][j] = true;
-                backtracking(path);
+                // 하위 탐색에서 찾았다면 즉시 true 반환 (조기 종료)
+                if (backtracking(path)) {
+                    return true;
+                }
                 // 원복
                 path.remove(path.size() - 1);
                 visited[i][j] = false;
             }
         }
+
+        // 가능한 모든 경로를 확인했으나 찾지 못한 경우
+        return false;
     }
 
     public record Cell(
