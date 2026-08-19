@@ -8,18 +8,6 @@ class Solution {
     private boolean isFound;
 
     public boolean exist(char[][] board, String word) {
-        /*
-        m, n 2종류가 있는데, 어떻게 선택지를 만들지?
-        현재 셀 기준 오로지 인접 셀만 선택가능한 것으로 어떻게 제한할 수 있지?
-
-        2차원 배열을 그래프 형태로 바꿀 수 있나?
-        DFS, backtracking보다는 BFS가 더 적합하지 않을까?
-
-        root node를 만들 수가 있을까?
-
-        m, n 인덱스를 필드로 갖는 임의의 클래스를 만들고, 2차원 배열을 모두 순회해서 key-value 매핑하기?
-        */
-
         // 조기 반환 : word의 시작 문자가 있는지 탐색
         boolean existFirstWord = false;
         firstWordList = new ArrayList<>();
@@ -68,14 +56,11 @@ class Solution {
     }
 
     // 백트래킹
-    // 종료 조건 : 글자수 충족 여부
-    // 조합에 추가하기
-    // 재귀 :
-    // 기존 셀 기준 오로지 인접 셀만 선택가능한 조합으로 제한하기
-    // 원복
     private void backtracking(List<Cell> path) {
-        assert path != null;
+        if (isFound) return;
 
+        // 종료 조건 : 글자수 충족 여부
+        assert path != null;
         if (path.size() == word.length()) {
             isFound = true;
             return;
@@ -107,6 +92,7 @@ class Solution {
                 path.add(cell);
                 visited[i][j] = true;
                 backtracking(path);
+                // 원복
                 path.remove(path.size() - 1);
                 visited[i][j] = false;
             }
