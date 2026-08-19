@@ -15,9 +15,9 @@ class Solution {
         2차원 배열을 그래프 형태로 바꿀 수 있나?
         DFS, backtracking보다는 BFS가 더 적합하지 않을까?
 
-        root node를 만들 수가 있을까? 
+        root node를 만들 수가 있을까?
 
-        m, n 인덱스를 필드로 갖는 임의의 클래스를 만들고, 2차원 배열을 모두 순회해서 key-value 매핑하기? 
+        m, n 인덱스를 필드로 갖는 임의의 클래스를 만들고, 2차원 배열을 모두 순회해서 key-value 매핑하기?
         */
 
         // 조기 반환 : word의 시작 문자가 있는지 탐색
@@ -78,40 +78,42 @@ class Solution {
     }
 
     // 백트래킹
-        // 종료 조건 : 글자수 충족 여부
-            // 조합에 추가하기
-        // 재귀 : 
-            // 기존 셀 기준 오로지 인접 셀만 선택가능한 조합으로 제한하기
-        // 원복
+    // 종료 조건 : 글자수 충족 여부
+    // 조합에 추가하기
+    // 재귀 :
+    // 기존 셀 기준 오로지 인접 셀만 선택가능한 조합으로 제한하기
+    // 원복
     private void backtracking(List<Cell> path) {
-        if (path != null && !path.isEmpty()) {
-            int currentLastIndex = path.size() - 1;
-            if (path.get(currentLastIndex).value != word.charAt(currentLastIndex)) {
-                return;
-            }
-        }
-        
+        assert path != null;
+
         if (path.size() == word.length()) {
             list.add(new ArrayList<>(path));
             return;
         }
 
         List<Cell> cells;
+        char wordToSearch;
+        
         if (path.isEmpty()) {
             // 첫번째 셀 후보 목록
             cells = firstWordList;
+            wordToSearch = word.charAt(0);
         } else {
             // path 가장 마지막 요소
             Cell currentLastCell = path.get(path.size() - 1);
 
             // 해당 셀에서 갈 수 있는 셀 목록
             cells = map.get(currentLastCell);
-        } 
+
+            // 찾을 요소
+            wordToSearch = word.charAt(path.size());
+        }
 
         for (Cell cell : cells) {
             int i = cell.n;
             int j = cell.m;
-            if (!visited[i][j]) {
+            // 찾고자 하는 문자와 일치하고 방문한 적이 없다면
+            if (cell.value == wordToSearch && !visited[i][j]) {
                 path.add(cell);
                 visited[i][j] = true;
                 backtracking(path);
@@ -122,8 +124,8 @@ class Solution {
     }
 
     public record Cell(
-        int n,
-        int m,
-        char value
+            int n,
+            int m,
+            char value
     ) {}
 } 
