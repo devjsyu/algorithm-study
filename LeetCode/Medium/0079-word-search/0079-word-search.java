@@ -103,7 +103,7 @@ class Solution {
             int i = cell.n;
             int j = cell.m;
             // 찾고자 하는 문자와 일치하고 방문한 적이 없다면
-            if (cell.value == wordToSearch && !visited[i][j]) {
+            if (!isFound && cell.value == wordToSearch && !visited[i][j]) {
                 path.add(cell);
                 visited[i][j] = true;
                 backtracking(path);
