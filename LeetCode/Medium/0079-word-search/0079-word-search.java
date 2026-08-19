@@ -5,7 +5,7 @@ class Solution {
     private boolean[][] visited;
     private Map<Cell, List<Cell>> map;
     private List<Cell> firstWordList;
-    private List<List<Cell>> list = new ArrayList<>();
+    private boolean isFound;
 
     public boolean exist(char[][] board, String word) {
         /*
@@ -63,18 +63,8 @@ class Solution {
 
         this.word = word;
         backtracking(new ArrayList<>());
-
-        for (List<Cell> path : list) {
-            String search = "";
-            for (Cell cell : path) {
-                search += String.valueOf(cell.value);
-            }
-            if (search.equals(word)) {
-                return true;
-            }
-        }
-
-        return false;
+        
+        return isFound;
     }
 
     // 백트래킹
@@ -87,13 +77,13 @@ class Solution {
         assert path != null;
 
         if (path.size() == word.length()) {
-            list.add(new ArrayList<>(path));
+            isFound = true;
             return;
         }
 
         List<Cell> cells;
         char wordToSearch;
-        
+
         if (path.isEmpty()) {
             // 첫번째 셀 후보 목록
             cells = firstWordList;
