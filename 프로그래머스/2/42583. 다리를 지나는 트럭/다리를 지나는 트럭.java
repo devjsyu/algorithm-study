@@ -1,43 +1,31 @@
 import java.util.ArrayDeque;
 import java.util.ArrayList;
-import java.util.Deque;
 import java.util.List;
+import java.util.Queue;
 
 class Solution {
     public int solution(int bridge_length, int weight, int[] truck_weights) {
-        int weightsOnBridge = 0;
-        int truckCount = truck_weights.length;
+        List<Integer> passed = new ArrayList<>();
+        Queue<Integer> bridge = new ArrayDeque<>();
+        int index = 0;
         int timePassed = 0;
-
-        Deque<Integer> bridgeQueue = new ArrayDeque<>();
-        for (int i = 0; i < bridge_length; i++) {
-            bridgeQueue.offer(0);
-        }
-
-        Deque<Integer> waitingQueue = new ArrayDeque<>();
-        for (int i = 0; i < truck_weights.length; i++) {
-            waitingQueue.offer(truck_weights[i]);
-        }
-
-        List<Integer> trucksPassed = new ArrayList<>();
-
-        while (trucksPassed.size() != truckCount) {
-            // dequeue
-            int passed = bridgeQueue.poll();
-            if (passed != 0) {
-                trucksPassed.add(passed);
-                weightsOnBridge -= passed;
+        int remainderWeight = weight;
+        while (passed.size() != truck_weights.length) {
+            if (!bridge.isEmpty() && bridge.size() == bridge_length) {
+                int polled = bridge.poll();
+                if (polled > 0) {
+                    passed.add(polled);
+                    remainderWeight += polled;
+                }
             }
 
-            // enqueue
-            if (!waitingQueue.isEmpty() && weight >= weightsOnBridge + waitingQueue.peek()) {
-                int poll = waitingQueue.poll();
-                bridgeQueue.offer(poll);
-                weightsOnBridge += poll;
+            if (truck_weights.length > index && remainderWeight >= truck_weights[index]) {
+                bridge.offer(truck_weights[index]);
+                remainderWeight -= truck_weights[index];
+                index++;
             } else {
-                bridgeQueue.offer(0);
+                bridge.offer(0);
             }
-
             timePassed++;
         }
 
