@@ -1,60 +1,72 @@
 import java.util.*;
 
+/**
+unvisited 경우에는 -1 저장하기
+각 Vertex에 해당 Vertex까지 도달하기 위해 지나온 길이를 저장하기
+*/
 class Solution {
     public int solution(int n, int[][] edge) {
-        BFS graph = new BFS();
-
-        for (int[] undirectionalEdge : edge) {
-            graph.addEdge(undirectionalEdge[0], undirectionalEdge[1]);
+        BFS bfs = new BFS();
+        
+        // 그래프 초기화
+        for (int[] e : edge) {
+            bfs.addEdge(e[0], e[1]);
         }
 
-        return graph.bfs(1, n);
+        return bfs.getBfs(n);
+        
     }
-
+    
     private static class BFS {
         private Map<Integer, List<Integer>> adjacencyList;
-
+    
         public BFS() {
             this.adjacencyList = new HashMap<>();
         }
-
-        private void addVertex(Integer vertex) {
-            adjacencyList.putIfAbsent(vertex, new ArrayList<>());
-        }
-
-        // undirectional graph
-        private void addEdge(Integer source, Integer destination) {
-            this.addVertex(source);
-            this.addVertex(destination);
-            adjacencyList.get(source).add(destination);
-            adjacencyList.get(destination).add(source);
-        }
-
-        private int bfs(Integer startVertex, int n) {
+    
+        private void addEdge(int u, int v) {
+            adjacencyList.computeIfAbsent(u, k -> new ArrayList<>()).add(v);
+            adjacencyList.computeIfAbsent(v, k -> new ArrayList<>()).add(u);
+        }        
+        
+        private int getBfs(int n) {
+            // Queue 초기화
             Queue<Integer> queue = new ArrayDeque<>();
-            int[] dist = new int[n + 1];
-            Arrays.fill(dist, -1); // -1은 미방문 상태
-
+            
+            // 방문 여부 확인 및 누적 길이 집계 역할 Map 초기화
+            Map<Integer, Integer> map = new HashMap<>();
+            for (int i = 0; i < n; i++) {
+                map.put(i + 1, -1);
+            }
+            
+            // startVertex 기준 초기화
+            int startVertex = 1;
             queue.add(startVertex);
-            dist[startVertex] = 0;
+            map.put(startVertex, 0);
 
-            int maxDist = 0;
-
+            // 최대 길이 저장할 변수 초기화
+            int maxDistance = -1;
+            
+            // BFS traversal
             while (!queue.isEmpty()) {
                 int currentVertex = queue.poll();
-
+                
                 for (int neighbor : adjacencyList.getOrDefault(currentVertex, Collections.emptyList())) {
-                    if (dist[neighbor] == -1) {
-                        dist[neighbor] = dist[currentVertex] + 1;
-                        maxDist = Math.max(maxDist, dist[neighbor]);
+                    if (map.get(neighbor) == -1) {
                         queue.add(neighbor);
+                        int currentDistance = map.get(currentVertex) + 1;
+                        map.put(neighbor, currentDistance);
+                        if (currentDistance > maxDistance) {
+                            maxDistance = currentDistance;
+                        }
                     }
                 }
             }
-
+            
+            // 순회하면서 원소가 최대 길이와 일치하면 누적 집계
             int count = 0;
-            for (int i = 1; i <= n; i++) {
-                if (dist[i] == maxDist) {
+            for (int value : map.values()) {
+                if (maxDistance == value) {
                     count++;
                 }
             }
