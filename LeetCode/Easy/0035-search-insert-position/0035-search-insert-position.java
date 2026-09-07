@@ -1,21 +1,24 @@
+/**
+Upper Bound Binary Search
+ */
+
 class Solution {
     public int searchInsert(int[] nums, int target) {
         int left = 0;
-        int right = nums.length - 1;
-        int middle = -1;
+        int right = nums.length;
 
-        while (left <= right) {
-            middle = (left + right) / 2;
+        while (left < right) {
+            int mid = left + (right - left) / 2;
 
-            if (target == nums[middle]) {
-                return middle;
-            } else if (target > nums[middle]) {
-                left = middle + 1;
+            if (target == nums[mid]) {
+                return mid;
+            } else if (target > nums[mid]) {
+                left = mid + 1;
             } else {
-                right = middle - 1;
+                right = mid;
             }
         }
 
-        return target > nums[middle] ? middle + 1 : middle;
+        return right;
     }
 }
