@@ -1,4 +1,3 @@
-// Boyer Moore 과반수 투표 알고리즘
 class Solution {
     public int majorityElement(int[] nums) {
         int candidate = nums[0];
@@ -8,13 +7,14 @@ class Solution {
             if (count == 0) {
                 candidate = num;
             }
-
-            if (num == candidate) {
+            
+            if (candidate == num) {
                 count++;
             } else {
                 count--;
             }
         }
+        
         return candidate;
     }
 }
