@@ -1,38 +1,49 @@
+/**
+- Greedy algorithm
+    - 각 학생마다 최대한 체육복을 확보하는 결정을 하면, 최대한 많은 학생이 체육복을 확보할 수 있다.
+
+- 주의점
+    - 여벌 체육복이 있지만, 도난 당한 학생은 다른 학생에게 체육복을 빌려줄 수 없다.
+*/
+import java.util.*;
+
 class Solution {
     public int solution(int n, int[] lost, int[] reserve) {
-        // 각 학생별 체육복 개수
-        int[] students = new int[n + 1]; // 인덱스가 곧 학생 번호
+        // 의사결정에 사용할 통합 배열 초기화
+        int[] clothes = new int[n + 1];
+        Arrays.fill(clothes, 1);
         
-        // lost 배열과 reserve 배열의 정보에 맞춰 초기화 하기
-        // 0이면 문제없고, -1이면 도난 당한 것이고, +1이면 잉여분 존재
-        for (int l : lost) {
-            students[l]--;
-        }
         for (int r : reserve) {
-            students[r]++;
+            clothes[r]++;
         }
         
-        // students 배열 순회하면서 도난 당한 학생이 도움을 받을 수 있는지 업데이트
+        for (int l : lost) {
+            clothes[l]--;
+        }
+        
+        // 0: 체육복을 빌려야 하는 학생
+        // 1: 체육복 빌릴 필요 없는 학생
+        // 2: 체육복 빌려줄 수 있는 학생
+        
         for (int i = 1; i <= n; i++) {
-            if (students[i] == -1) {
-                if (i - 1 >= 1 && students[i - 1] == 1) {
-                    students[i]++;
-                    students[i - 1]--;
-                } else if (i + 1 <= n && students[i + 1] == 1) {
-                    students[i]++;
-                    students[i + 1]--;
+            if (clothes[i] == 0) {
+                if (i - 1 >= 1 && clothes[i - 1] == 2) {
+                    clothes[i] = 1;
+                    clothes[i - 1] = 1;
+                } else if (i + 1 <= n && clothes[i + 1] == 2) {
+                    clothes[i] = 1;
+                    clothes[i + 1] = 1;
                 }
             }
         }
         
-        // 각 인덱스별 원소값 중 0인 것만 집계하기
-        int answer = 0;
+        int count = 0;
         for (int i = 1; i <= n; i++) {
-            if (students[i] >= 0) {
-                answer++;
-            }
+            if (clothes[i] >= 1) {
+                count++;
+            } 
         }
         
-        return answer;
+        return count;
     }
 }
