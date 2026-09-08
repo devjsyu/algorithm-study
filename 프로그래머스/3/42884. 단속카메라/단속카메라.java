@@ -2,25 +2,23 @@ import java.util.*;
 
 class Solution {
     public int solution(int[][] routes) {
-        // 차량 진출 지점을 기준으로 오름차순 정렬
-        Arrays.sort(routes, (a, b) -> Integer.compare(a[1], b[1]));
+        // 주어진 배열을 진출 지점 기준으로 오름차순 정렬
+        Arrays.sort(routes, (v1, v2) -> {
+            return v1[1] - v2[1];
+        });
         
-        int answer = 0;
-        // 첫 카메라 위치를 고속도로 시작 전으로 초기화
-        int lastCamera = -30001;
-        
-        // 순회
-        for (int[] route : routes) {
-            int entry = route[0];
-            int exit = route[1];
-            
-            // 카메라 위치가 차량 진입 지점보다 앞에 있다면 새로운 카메라 필요
-            if (lastCamera < entry) {
-                lastCamera = exit;
-                answer++;
+        int count = 0;
+        int previousCamera = Integer.MIN_VALUE;
+        for (int i = 0; i < routes.length; i++) {
+            // 직전 카메라 위치와 진입지점 비교해서 설치 생략 여부 판단
+            if (previousCamera >= routes[i][0]) {
+                continue;
+            } else {
+                count++;
+                previousCamera = routes[i][1];
             }
         }
         
-        return answer;
+        return count;
     }
 }
