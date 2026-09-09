@@ -6,14 +6,14 @@ Leftmost True
  */
 class Solution {
     public int shipWithinDays(int[] weights, int days) {
-        int left = 1;
-
-        int max = -1;
+        int sum = 0;
+        int min = Integer.MAX_VALUE;
         for (int weight : weights) {
-            if (weight > max) max = weight;
+            if (weight < min) min = weight;
+            sum += weight;
         }
-
-        int right = max * weights.length;
+        int left = min;
+        int right = sum;
 
         int answer = 0;
         while (left <= right) {
@@ -46,7 +46,7 @@ class Solution {
                 currentLoad += weight;
             }
         }
-        
+
         return days;
     }
 }
