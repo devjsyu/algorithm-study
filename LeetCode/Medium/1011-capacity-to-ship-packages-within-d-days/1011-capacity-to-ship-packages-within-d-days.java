@@ -35,10 +35,6 @@ class Solution {
         int currentLoad = 0;
 
         for (int weight : weights) {
-            if (weight > capacity) {
-                return Integer.MAX_VALUE;
-            }
-
             if (currentLoad + weight > capacity) {
                 days++;
                 currentLoad = weight;
