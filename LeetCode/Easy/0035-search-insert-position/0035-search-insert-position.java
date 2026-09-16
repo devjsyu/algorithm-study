@@ -1,5 +1,5 @@
 /**
-Upper Bound Binary Search
+Upper-bound Binary Search
  */
 
 class Solution {
@@ -14,11 +14,11 @@ class Solution {
                 return mid;
             } else if (target > nums[mid]) {
                 left = mid + 1;
-            } else {
+            } else if (target < nums[mid]) {
                 right = mid;
             }
         }
 
-        return right;
+        return left;
     }
 }
