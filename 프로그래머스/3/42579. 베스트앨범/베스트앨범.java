@@ -1,62 +1,38 @@
+// 빈도수 집계를 위해 HashMap 사용
+// 여러 데이터를 record 클래스로 묶어서 관리하기
+// Grouping By Genre
+// 커스텀 정렬 id, count
 import java.util.*;
 
 class Solution {
     public int[] solution(String[] genres, int[] plays) {
-    // 준비
-        // 장르별 집계를 위한 자료구조 초기화
-        Map<String, Integer> genreToPlayCount = new HashMap<>();
-
-        Map<Integer, GenreToPlayCount> idToGenreAndPlayCount = new HashMap<>();
-
+        // 총 재생횟수 기준 장르 정렬하기
+        Map<String, Integer> genreToCount = new HashMap<>();
         for (int i = 0; i < genres.length; i++) {
-            idToGenreAndPlayCount.put(i, new GenreToPlayCount(genres[i], plays[i]));
+            genreToCount.put(genres[i], genreToCount.getOrDefault(genres[i], 0) + plays[i]);
         }
-        Set<Map.Entry<Integer, GenreToPlayCount>> idToGenreAndPlayCountEntrySet = idToGenreAndPlayCount.entrySet();
-
-        // 정답 담을 리스트 초기화
+        List<String> genreOrdered = genreToCount.keySet().stream()
+            .sorted((k1, k2) -> genreToCount.get(k2) - genreToCount.get(k1))
+            .toList();
+        
+        Map<String, List<Song>> genreToSong = new HashMap<>();
+        for (int i = 0; i < genres.length; i++) {
+            genreToSong.computeIfAbsent(genres[i], k -> new ArrayList<>()).add(new Song(i, plays[i]));
+        }
+        
         List<Integer> answer = new ArrayList<>();
-
-
-    // 1차 정렬 : 많이 재생된 장르 순
-        // 장르별 집계
-        for (int i = 0; i < genres.length; i++) {
-            genreToPlayCount.put(genres[i], genreToPlayCount.getOrDefault(genres[i], 0) + plays[i]);
+        for (int i = 0; i < genreOrdered.size(); i++) {
+            genreToSong.get(genreOrdered.get(i)).stream().sorted((s1, s2) -> {
+                if (s1.count() == s2.count()) {
+                    return s1.id() - s2.id();
+                } else {
+                    return s2.count() - s1.count();
+                }
+            }).limit(2).forEach(s -> answer.add(s.id()));
         }
-
-        // 많이 재생된 장르 순 정렬
-        List<String> genreByPopularityOrdered = genreToPlayCount.entrySet().stream()
-                .sorted((e1, e2) -> e2.getValue() - e1.getValue())
-                .map(Map.Entry::getKey)
-                .toList();
-
-    // 2차 정렬 : 재생횟수, 고유번호 순 정렬
-        // 장르 순회
-        for (int i = 0; i < genreByPopularityOrdered.size(); i++) {
-            int index = i;
-            idToGenreAndPlayCountEntrySet.stream()
-                    // 장르별 처리
-                    .filter(o -> o.getValue().genre.equals(genreByPopularityOrdered.get(index)))
-                    // 정렬 조건 만족하는 custom comparator 선언
-                    .sorted((o1, o2) -> {
-                        // 재생횟수가 같은 경우 고유번호 오름차순 정렬
-                        if (o1.getValue().playerCount.equals(o2.getValue().playerCount)) {
-                            return o1.getKey().compareTo(o2.getKey());
-                        } else {
-                            // 재생횟수 내림차순 정렬
-                            return o2.getValue().playerCount.compareTo(o1.getValue().playerCount);
-                        }
-                    })
-                    // 필요한 정보만 필터링 가공
-                    .map(Map.Entry::getKey)
-                    // Top 2
-                    .limit(2)
-                    // 정답 리스트에 추가
-                    .forEach(answer::add);
-        }
-
-        // 정답 반환
+        
         return answer.stream().mapToInt(Integer::intValue).toArray();
     }
-
-    public record GenreToPlayCount(String genre, Integer playerCount) {}
+    
+    public record Song(int id, int count) {}
 }
