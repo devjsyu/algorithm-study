@@ -1,5 +1,3 @@
-import java.util.*;
-
 class Solution {
     public int[] findErrorNums(int[] nums) {
         int[] count = new int[nums.length + 1];
@@ -8,15 +6,16 @@ class Solution {
             count[nums[i]]++;
         }
 
-        int[] answer = new int[2];
+        int missing = -1;
+        int duplicated = -1;
         for (int i = 1; i <= nums.length; i++) {
             if (count[i] == 2) {
-                answer[0] = i;
+                duplicated = i;
             } else if (count[i] ==0) {
-                answer[1] = i;
+                missing = i;
             }
         }
 
-        return answer;
+        return new int[]{duplicated, missing};
     }
 }
