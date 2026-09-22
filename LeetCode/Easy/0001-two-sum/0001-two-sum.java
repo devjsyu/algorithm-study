@@ -3,12 +3,10 @@ class Solution {
         Map<Integer, Integer> numberToIndex = new HashMap<>();
 
         for (int i = 0; i < nums.length; i++) {
-            numberToIndex.put(nums[i], i);
-        }
-
-        for (int i = 0; i < nums.length; i++) {
             int rest = target - nums[i];
-            if (numberToIndex.containsKey(rest) && numberToIndex.get(rest) != i) {
+            if (!numberToIndex.containsKey(rest)) {
+                numberToIndex.put(nums[i], i);
+            } else if (numberToIndex.get(rest) != i) {
                 return new int[]{i, numberToIndex.get(rest)};
             }
         }
