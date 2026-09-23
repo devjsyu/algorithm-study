@@ -1,0 +1,7 @@
+- 서로 다른 두 원소의 모든 조합 구하기
+  - $O(N^2)$ double for-loop 
+  - `i = 0, j = i + 1`
+- 중복 제거
+  - set.contains()를 일일이 호출할 필요없이 묻지도 따지지도 않고 바로 set.add() 해도 된다.
+- Set<Integer> set를 정렬된 int[]로 만드는 방법은?
+  - `set.stream().sorted().mapToInt(Integer::intValue).toArray();`
