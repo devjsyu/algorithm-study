@@ -20,20 +20,20 @@ class Solution {
             graph[v2].add(new Edge(v1, succProb[i]));
         }
 
-        return dijkstra(graph, n, edges, succProb, start_node, end_node);
+        return dijkstra(graph, n, start_node, end_node);
     }
 
     public record Edge(int to, double weight) {}
 
     public record State(int node, double dist) {}
 
-    private double dijkstra(List<Edge>[] graph, int n, int[][] edges, double[] succProb, int start_node, int end_node) {
+    private double dijkstra(List<Edge>[] graph, int n, int start_node, int end_node) {
         // maxHeap
         PriorityQueue<State> pq = new PriorityQueue<>((a, b) -> Double.compare(b.dist, a.dist));
         double[] dist = new double[n];
-        Arrays.fill(dist, -1);
 
-        pq.offer(new State(start_node, 1));
+        pq.offer(new State(start_node, 1.0));
+        dist[start_node] = 1.0;
 
         while (!pq.isEmpty()) {
             State cur = pq.poll();
@@ -41,6 +41,11 @@ class Solution {
             // stale data check
             if (dist[cur.node] > cur.dist) {
                 continue;
+            }
+
+            // Max Heap에서 stale이 아닌 endNode가 poll되는 순간, 그 값이 최대 성공 확률로 확정
+            if (cur.node == end_node) {
+                return dist[end_node];
             }
 
             for (Edge edge : graph[cur.node]) {
@@ -55,6 +60,6 @@ class Solution {
             }
         }
 
-        return dist[end_node] == -1 ? 0 : dist[end_node];
+        return 0.0;
     }
 }
