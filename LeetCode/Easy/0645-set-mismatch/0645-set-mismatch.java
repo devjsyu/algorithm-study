@@ -1,17 +1,19 @@
+// 배열 인덱스에 찾고자 하는 숫자를 매핑하고, 배열 원소를 빈도수로 매핑한다
+// 시간복잡도 O(2N), 공간복잡도 O(N)
 class Solution {
     public int[] findErrorNums(int[] nums) {
-        int[] count = new int[nums.length + 1];
+        int[] frequency = new int[nums.length + 1]; // 1-index
 
-        for (int i = 0; i < nums.length; i++) {
-            count[nums[i]]++;
+        for (int num : nums) {
+            frequency[num]++;
         }
 
-        int missing = -1;
-        int duplicated = -1;
+        int duplicated = 0;
+        int missing = 0;
         for (int i = 1; i <= nums.length; i++) {
-            if (count[i] == 2) {
+            if (frequency[i] == 2) {
                 duplicated = i;
-            } else if (count[i] ==0) {
+            } else if (frequency[i] == 0) {
                 missing = i;
             }
         }
