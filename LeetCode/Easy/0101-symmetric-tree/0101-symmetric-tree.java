@@ -15,30 +15,26 @@
  */
 class Solution {
     public boolean isSymmetric(TreeNode root) {
-         return isMirror(root.left, root.right);       
+        return isMirror(root.left, root.right);
     }
 
-    private boolean isMirror(TreeNode left, TreeNode right) {
+    private boolean isMirror(TreeNode a, TreeNode b) {
         // base condition
-        if (left == null && right == null) {
+        if (a == null && b == null) {
             return true;
         }
 
-        // 불일치 조건 1
-        // 한 쪽만 null인 경우 필터링
-        if (left == null || right == null) {
+        // mismatch case filtering 1
+        if (a == null || b == null) {
             return false;
         }
 
-        // 위 필터링 이후 모두 null이 아님을 보장
-
-        // 불일치 조건 2
-        if (left.val != right.val) {
+        // mismatch case filtering 2
+        if (a.val != b.val) {
             return false;
         }
 
         // recursive part
-        return isMirror(left.left, right.right) 
-            && isMirror(left.right, right.left);
+        return isMirror(a.left, b.right) && isMirror(a.right, b.left);
     }
 }
