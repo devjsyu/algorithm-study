@@ -18,28 +18,23 @@ class Solution {
         return isSame(p, q);
     }
 
-    private boolean isSame(TreeNode a, TreeNode b) {
-        // current comparison
-
-        // 1. base condition
-        if (a == null && b == null) {
+    private boolean isSame(TreeNode p, TreeNode q) {
+        // base condition
+        if (p == null && q == null) {
             return true;
         }
 
-        // 2. mismatch filtering
-        if (a == null || b == null) {
+        // mismatch filtering 1
+        if (p == null || q == null) {
             return false;
         }
 
-        // from now on, both left and right are guaranteed to be not null
-
-        if (a.val != b.val) {
+        // mismatch filtering 2
+        if (p.val != q.val) {
             return false;
         }
 
-        // next comparison
-
-        // 3. recursive part
-        return isSame(a.left, b.left) && isSame(a.right, b.right);
+        // recursive part
+        return isSame(p.left, q.left) && isSame(p.right, q.right);
     }
 }
