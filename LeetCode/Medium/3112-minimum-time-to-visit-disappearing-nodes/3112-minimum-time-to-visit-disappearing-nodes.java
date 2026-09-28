@@ -38,14 +38,10 @@ class Solution {
         int[] dist = new int[n];
         Arrays.fill(dist, Integer.MAX_VALUE);
 
-        int[] prev = new int[n];
-        Arrays.fill(prev, -1);
-
         PriorityQueue<State> pq = new PriorityQueue<>((a, b) -> Integer.compare(a.dist(), b.dist()));
 
         pq.offer(new State(0, 0));
         dist[0] = 0;
-        prev[0] = 0;
 
         while (!pq.isEmpty()) {
             State cur = pq.poll();
@@ -68,7 +64,6 @@ class Solution {
                     dist[next] = newDist;
 
                     pq.offer(new State(next, newDist));
-                    prev[next] = cur.node();
                 }
             }
         }
