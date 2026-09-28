@@ -1,48 +1,38 @@
-import java.util.ArrayDeque;
-import java.util.Deque;
-
+/**
+iterating tokens
+    operand? push to the stack
+    operator? pop the stack twice and push the result to the stack
+ */
 class Solution {
     public int evalRPN(String[] tokens) {
-        Set<String> operators = new HashSet<>();
-        operators.add("+");
-        operators.add("-");
-        operators.add("*");
-        operators.add("/");
+        Deque<Integer> operand = new ArrayDeque<>();
 
-        Deque<Integer> stack = new ArrayDeque<>();
+        int result = 0;
         for (String token : tokens) {
-            
-            if (!operators.contains(token)) {
-                stack.push(Integer.parseInt(token));                
-            } else if (stack.size() >= 2) {
-                int operand1 = stack.pop();
-                int operand2 = stack.pop();
-                char operator = token.charAt(0);
-                int result = operateRPN(operand1, operand2, operator);
-                
-                stack.push(result);
+            if (token.length() == 1 && !Character.isDigit(token.charAt(0))) {
+                int b = operand.pop();
+                int a = operand.pop();
+
+                switch (token.charAt(0)) {
+                    case '+' :
+                        result = a + b;
+                        break;
+                    case '-' :
+                        result = a - b;
+                        break;
+                    case '*' :
+                        result = a * b;
+                        break;
+                    case '/' :
+                        result = a / b;
+                        break;
+                } 
+                operand.push(result);
+            } else {
+                operand.push(Integer.parseInt(token));
             }
         }
 
-        return stack.pop();
-    }
-
-    private int operateRPN(int operand1, int operand2, char operator) {
-        int answer = 0;
-        switch (operator) {
-            case '+' :
-                answer = operand1 + operand2;
-                break;
-            case '-' :
-                answer = operand2 - operand1;
-                break;
-            case '*' :
-                answer = operand1 * operand2;
-                break;
-            case '/' :
-                answer = operand2 / operand1;
-                break;
-        }
-        return answer;
+        return operand.isEmpty() ? result : operand.pop();    
     }
 }
