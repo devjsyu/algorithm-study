@@ -31,8 +31,6 @@ class Solution {
 
     public record State(int node, int dist) {}
 
-    public record Result(int[] dist, int[] prev) {}
-
     // 다익스트라
     private int[] dijkstra(int n, List<Edge>[] graph, int[] disappear) {
         int[] dist = new int[n];
