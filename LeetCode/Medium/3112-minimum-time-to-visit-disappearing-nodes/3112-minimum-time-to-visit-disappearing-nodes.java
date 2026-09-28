@@ -1,6 +1,3 @@
-/**
-
- */
 import java.util.*;
 
 class Solution {
@@ -20,8 +17,7 @@ class Solution {
         }
 
         // 다익스트라
-        Result result = dijkstra(n, graph, disappear);
-        int[] dist = result.dist();
+        int[] dist = dijkstra(n, graph, disappear);
 
         int[] answer = new int[n];
         for (int i = 0; i < n; i++) {
@@ -38,7 +34,7 @@ class Solution {
     public record Result(int[] dist, int[] prev) {}
 
     // 다익스트라
-    private Result dijkstra(int n, List<Edge>[] graph, int[] disappear) {
+    private int[] dijkstra(int n, List<Edge>[] graph, int[] disappear) {
         int[] dist = new int[n];
         Arrays.fill(dist, Integer.MAX_VALUE);
 
@@ -77,6 +73,6 @@ class Solution {
             }
         }
 
-        return new Result(dist, prev);
+        return dist;
     }
 }
