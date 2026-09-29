@@ -1,22 +1,24 @@
 /**
-탐색 중인 인덱스 이후 최초의 하락 가격에 대해 차감한 만큼 할인 적용됨
+최초 가격 하락 시점 탐색을 위해 monotonic stack 사용
+is price decreased? 
+    yes:   
+        things that's not determined yet -> push to the stack
+    no:
+        while: the current thing is finally determined -> pop the stack
  */
 class Solution {
     public int[] finalPrices(int[] prices) {
-        int[] answer = new int[prices.length];
+        Deque<Integer> stack = new ArrayDeque<>();
+
         for (int i = 0; i < prices.length; i++) {
-            answer[i] = prices[i];
-        }
-
-        for (int i = 0; i < prices.length - 1; i++) {
-            for (int j = i + 1; j < prices.length; j++) {
-                if (prices[i] >= prices[j]) {
-                    answer[i] = prices[i] - prices[j];
-                    break;
-                }
+            while (!stack.isEmpty() && prices[stack.peek()] >= prices[i]) {
+                int popped = stack.pop();
+                prices[popped] = prices[popped] - prices[i];
             }
+
+            stack.push(i);
         }
 
-        return answer;
+        return prices;
     }
 }
