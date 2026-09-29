@@ -1,21 +1,29 @@
 class Solution {
     public int timeRequiredToBuy(int[] tickets, int k) {
-        // Queue 초기화
-        Queue<Integer> ticketsToBuy = new ArrayDeque<>();
+        Queue<Buyer> queue = new ArrayDeque<>();
         for (int i = 0; i < tickets.length; i++) {
-            ticketsToBuy.offer(i);
+            queue.offer(new Buyer(i, tickets[i]));
         }
 
-        // tickets[k]가 0이 될 때까지 반복
         int timePassed = 0;
-        while (tickets[k] != 0) {
-            tickets[ticketsToBuy.peek()]--;
-            if (tickets[ticketsToBuy.peek()] > 0) {
-                ticketsToBuy.offer(ticketsToBuy.peek());
+        while (!queue.isEmpty()) {
+            Buyer buyer = queue.poll();
+            int index = buyer.index();
+            int ticketsToBuy = buyer.ticketsToBuy();
+            
+            if (--ticketsToBuy > 0) {
+                queue.offer(new Buyer(index, ticketsToBuy));
             }
-            ticketsToBuy.poll();
+
             timePassed++;
+
+            if (index == k && ticketsToBuy == 0) {
+                break;
+            }
         }
+
         return timePassed;
     }
+
+    public record Buyer(int index, int ticketsToBuy) {}
 }
