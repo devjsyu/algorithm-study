@@ -1,0 +1,3 @@
+- 문제에서 묻는 것: _source와 destination이 이미 같은 connected component에 속해 있는가?_
+- Union-Find는 원래 그래프 자체를 저장하는 자료구조가 아니라, 그래프의 "**연결 관계**"만 압축해서 저장하는 자료구조이다.
+- union(a, b)는 "a-b 간선을 저장한다"가 아니라 "**a와 b가 속한 두 connected component를 하나의 component로 합친다**"이다.
