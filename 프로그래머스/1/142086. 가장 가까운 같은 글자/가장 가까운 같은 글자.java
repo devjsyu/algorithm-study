@@ -4,16 +4,17 @@ class Solution {
     public int[] solution(String s) {
         int[] answer = new int[s.length()];
         
-        Map<Character, Integer> charToCount = new HashMap<>();
+        int[] alphabets = new int[26];
+        Arrays.fill(alphabets, -1);
         
         for (int i = 0; i < s.length(); i++) {
-            char letter = s.charAt(i);
-            if (!charToCount.containsKey(letter)) {
+            int index = (int) s.charAt(i) - 'a';
+            if (alphabets[index] == -1) {
                 answer[i] = -1;
             } else {
-                answer[i] = i - charToCount.get(letter);
+                answer[i] = i - alphabets[index];
             }
-            charToCount.put(letter, i);
+            alphabets[index] = i;
         }
         
         return answer;
