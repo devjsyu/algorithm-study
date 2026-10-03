@@ -2,17 +2,6 @@ class Solution {
     public int[] exclusiveTime(int n, List<String> logs) {
         Deque<Log> stack = new ArrayDeque<>();
         int[] exclusiveTime = new int[n];
-        
-        List<Log> list = new ArrayList<>();
-        for (String log : logs) {
-            String[] parts = log.split(":");
-            list.add(new Log(
-                Integer.parseInt(parts[0]), 
-                parts[1].equals("start"), 
-                Integer.parseInt(parts[2])
-                )
-            );
-        }
 
         for (String logString : logs) {
             String[] parts = logString.split(":");
