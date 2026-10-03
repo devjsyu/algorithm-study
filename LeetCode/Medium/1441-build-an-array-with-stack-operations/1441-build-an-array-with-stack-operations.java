@@ -1,25 +1,27 @@
-// Two pointer pattern
+/**
+is num the one of the elements from the target array?
+    yes?    -> push
+    no?     -> push and pop
+ */
 class Solution {
     public List<String> buildArray(int[] target, int n) {
-        List<String> list = new ArrayList<>();
-        
-        int targetIndex = 0;
+        List<String> answer = new ArrayList<>();
+
+        int i = 0;
         for (int num = 1; num <= n; num++) {
-            if (targetIndex == target.length) {
+            if (i >= target.length) {
                 break;
             }
 
-            list.add("Push");
-
-            if (num == target[targetIndex]) {
-                // 일치
-                targetIndex++; // Pointer update
+            if (target[i] == num) {
+                answer.add("Push");
+                i++;
             } else {
-                // 불일치
-                list.add("Pop");
+                answer.add("Push");
+                answer.add("Pop");
             }
         }
 
-        return list; 
+        return answer;
     }
 }
