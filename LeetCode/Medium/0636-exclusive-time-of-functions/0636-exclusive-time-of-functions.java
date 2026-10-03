@@ -1,38 +1,38 @@
 /**
-start? -> push to the stack
-end? -> pop the stack and calculate the exclusive time
-     -> exclusiveTimeForId[popped.id] += exclusiveTime
-stack.isEmpty? -> no more function in the call stack
-!stack.isEmpty? -> there's still at least one function running
-                -> subtract the time for the single CPU
-                -> exclusiveTimeForId[top.id] -= exclusiveTime
+
  */
 class Solution {
     public int[] exclusiveTime(int n, List<String> logs) {
-        int[] arr = new int[n];
         Deque<Log> stack = new ArrayDeque<>();
+        int[] exclusiveTime = new int[n];
         
+        List<Log> list = new ArrayList<>();
         for (String log : logs) {
             String[] parts = log.split(":");
-            int id = Integer.parseInt(parts[0]);
-            String status = parts[1];
-            int timestamp = Integer.parseInt(parts[2]);
+            list.add(new Log(
+                Integer.parseInt(parts[0]), 
+                parts[1].equals("start"), 
+                Integer.parseInt(parts[2])
+                )
+            );
+        }
 
-            if (status.equals("start")) {
-                stack.push(new Log(id, status, timestamp));
+        for (Log log : list) {
+            if (log.isStart()) {
+                stack.push(log);
             } else {
                 Log popped = stack.pop();
-                int exclusiveTime = timestamp - popped.timestamp() + 1;
-                arr[id] += exclusiveTime;
+                int currentExclusiveTime = log.timestamp() - popped.timestamp() + 1;
+                exclusiveTime[popped.id()] += currentExclusiveTime;
 
                 if (!stack.isEmpty()) {
-                    arr[stack.peek().id()] -= exclusiveTime;
+                    exclusiveTime[stack.peek().id()] -= currentExclusiveTime;
                 }
             }
         }
 
-        return arr;
+        return exclusiveTime;
     }
 
-    public record Log(int id, String status, int timestamp) {}
+    public record Log(int id, boolean isStart, int timestamp) {}
 }
