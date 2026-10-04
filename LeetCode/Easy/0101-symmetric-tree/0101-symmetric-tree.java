@@ -18,23 +18,23 @@ class Solution {
         return isMirror(root.left, root.right);
     }
 
-    private boolean isMirror(TreeNode a, TreeNode b) {
+    private boolean isMirror(TreeNode p, TreeNode q) {
         // base condition
-        if (a == null && b == null) {
+        if (p == null && q == null) {
             return true;
         }
 
         // mismatch case filtering 1
-        if (a == null || b == null) {
+        if (p == null || q == null) {
             return false;
         }
 
         // mismatch case filtering 2
-        if (a.val != b.val) {
+        if (p.val != q.val) {
             return false;
         }
 
         // recursive part
-        return isMirror(a.left, b.right) && isMirror(a.right, b.left);
+        return isMirror(p.left, q.right) && isMirror(p.right, q.left);
     }
 }
