@@ -15,26 +15,26 @@
  */
 class Solution {
     public boolean isSameTree(TreeNode p, TreeNode q) {
-        return isSame(p, q);
+        return isMirror(p, q);
     }
 
-    private boolean isSame(TreeNode p, TreeNode q) {
+    private boolean isMirror(TreeNode p, TreeNode q) {
         // base condition
         if (p == null && q == null) {
             return true;
         }
 
-        // mismatch filtering 1
+        // mismatch condition filtering 1
         if (p == null || q == null) {
             return false;
         }
 
-        // mismatch filtering 2
+        // mismatch condition filtering 2
         if (p.val != q.val) {
             return false;
         }
 
         // recursive part
-        return isSame(p.left, q.left) && isSame(p.right, q.right);
+        return isMirror(p.left, q.left) && isMirror(p.right, q.right);
     }
 }
