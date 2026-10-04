@@ -1,27 +1,38 @@
 class Solution {
     public int[] exclusiveTime(int n, List<String> logs) {
+        int[] exclusiveTimeArray = new int[n];
         Deque<Log> stack = new ArrayDeque<>();
-        int[] exclusiveTime = new int[n];
+        
+        for (String log : logs) {
+            Log current = new Log(log);
 
-        for (String logString : logs) {
-            String[] parts = logString.split(":");
-            Log log = new Log(Integer.parseInt(parts[0]), parts[1].equals("start"), Integer.parseInt(parts[2]));
-
-            if (log.isStart()) {
-                stack.push(log);
+            if (current.isStart) {
+                stack.push(current);
             } else {
                 Log popped = stack.pop();
-                int duration = log.timestamp() - popped.timestamp() + 1;
-                exclusiveTime[popped.id()] += duration;
+                int duration = current.timestamp - popped.timestamp + 1;
+                exclusiveTimeArray[popped.id] += duration;
 
                 if (!stack.isEmpty()) {
-                    exclusiveTime[stack.peek().id()] -= duration;
+                    exclusiveTimeArray[stack.peek().id] -= duration;
                 }
             }
         }
 
-        return exclusiveTime;
+        return exclusiveTimeArray;
     }
 
-    public record Log(int id, boolean isStart, int timestamp) {}
+    public static class Log {
+        private int id;
+        private boolean isStart;
+        private int timestamp;
+
+        public Log(String log) {
+            String[] parts = log.split(":");
+
+            this.id = Integer.parseInt(parts[0]);
+            this.isStart = parts[1].equals("start");
+            this.timestamp = Integer.parseInt(parts[2]);
+        }
+    } 
 }
