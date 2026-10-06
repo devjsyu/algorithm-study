@@ -1,18 +1,22 @@
+/**
+Why Prefix Sum?
+특정 구간의 합을 반복적으로 구한다면, 각 인덱스별 누적 합을 미리 구해두고, 끝 인덱스의 값과 시작 인덱스의 값 간의 차감을 통해 반복 연산을 줄일 수 있다.
+ */
 class NumArray {
     private int[] nums;
-    private int[] prefixSum;
-
+    private int[] prefix;
+    
     public NumArray(int[] nums) {
-        this.nums = nums; 
-        this.prefixSum = new int[nums.length + 1];
-
-        for (int i = 0; i < nums.length; i++) {
-            prefixSum[i + 1] = prefixSum[i] + nums[i];
+        this.nums = nums;
+        this.prefix = new int[nums.length + 1];
+        prefix[0] = nums[0];
+        for (int i = 1; i < nums.length; i++) {
+            prefix[i] = prefix[i - 1] + nums[i];
         }
     }
     
     public int sumRange(int left, int right) {
-        return prefixSum[right + 1] - prefixSum[left];
+        return prefix[right] - prefix[left] + nums[left];
     }
 }
 
