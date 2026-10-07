@@ -1,3 +1,7 @@
+/**
+중복되는 원소 제거하기
+(최대 가짓수, N/2) 중 최솟값 반환
+*/
 import java.util.*;
 
 class Solution {
@@ -6,7 +10,7 @@ class Solution {
         for (int num : nums) {
             set.add(num);
         }
-        int k = nums.length / 2;
-        return Math.min(k, set.size());
+        
+        return Math.min(nums.length / 2, set.size());
     }
 }
