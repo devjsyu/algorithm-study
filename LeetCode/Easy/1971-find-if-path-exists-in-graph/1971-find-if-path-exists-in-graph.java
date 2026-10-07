@@ -2,7 +2,6 @@ class Solution {
     public boolean validPath(int n, int[][] edges, int source, int destination) {
         this.parent = new int[n];
         this.size = new int[n];
-        this.components = n;
 
         for (int i = 0; i < n; i++) {
             parent[i] = i;
@@ -22,7 +21,6 @@ class Solution {
 
     private int[] parent;
     private int[] size;
-    private int components;
 
     private int find(int x) {
         if (parent[x] != x) {
@@ -48,7 +46,6 @@ class Solution {
 
         parent[rootB] = rootA;
         size[rootA] += size[rootB];
-        components--;
 
         return true;
     }
