@@ -1,3 +1,6 @@
+/**
+Union-Find algorithm를 통해 components의 개수 반환하기
+ */
 class Solution {
     public int findCircleNum(int[][] isConnected) {
         int n = isConnected.length;
@@ -11,13 +14,15 @@ class Solution {
         }
 
         for (int i = 0; i < n; i++) {
-            for (int j = i + 1; j < n; j++) {
-                if (isConnected[i][j] == 1) {
-                    union(i, j);
+            for (int j = 0; j < n; j++) {
+                if (i == j || isConnected[i][j] == 0) {
+                    continue;
                 }
+
+                union(i, j);
             }
         }
-        
+
         return components;
     }
 
