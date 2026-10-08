@@ -9,22 +9,17 @@ class Solution {
     public String licenseKeyFormatting(String s, int k) {
         StringBuilder sb = new StringBuilder();
         int scanned = 0;
-        for (int i = s.length() - 1; i >= 0; i--) {
-            if (scanned > 0 && scanned % k == 0) {
-                sb.append('-');
-                scanned = 0;
-            } 
-            
+        for (int i = s.length() - 1; i >= 0; i--) {         
             char c = s.charAt(i);
             
             if (c == '-') continue;
 
+            if (scanned > 0 && scanned % k == 0) {
+                sb.append('-');
+            } 
+
             sb.append(c);
             scanned++;
-        }
-
-        if (sb.length() > 1 && sb.charAt(sb.length() - 1) == '-') {
-            sb.deleteCharAt(sb.length() - 1);
         }
 
         return sb.reverse().toString().toUpperCase();
