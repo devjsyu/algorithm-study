@@ -18,10 +18,10 @@ class Solution {
                 sb.append('-');
             } 
 
-            sb.append(c);
+            sb.append(Character.toUpperCase(c));
             scanned++;
         }
 
-        return sb.reverse().toString().toUpperCase();
+        return sb.reverse().toString();
     }
 }
