@@ -2,18 +2,13 @@ class Solution {
     public boolean validPath(int n, int[][] edges, int source, int destination) {
         this.parent = new int[n];
         this.size = new int[n];
-
         for (int i = 0; i < n; i++) {
             parent[i] = i;
             size[i] = 1;
         }
-        
-        
-        for (int[] edge : edges) {
-            int a = edge[0];
-            int b = edge[1];
 
-            union(a, b);
+        for (int[] edge : edges) {
+            union(edge[0], edge[1]);
         }
 
         return find(source) == find(destination);
@@ -21,7 +16,7 @@ class Solution {
 
     private int[] parent;
     private int[] size;
-
+    
     private int find(int x) {
         if (parent[x] != x) {
             return parent[x] = find(parent[x]);
