@@ -7,7 +7,7 @@ class Solution {
         
         // Set<Integer>[] 자료구조 초기화 하기
         
-        // dp[0]는 무시
+        // dp[0]은 무시
         // 최솟값이 8보다 크면 -1을 return하므로 dp[8]까지만 필요
         for (int i = 1; i <= 8; i++) {
             dp[i] = new HashSet<>();
@@ -27,7 +27,7 @@ class Solution {
             // Case 2
             // i번 사용을 두 그룹으로 나눈다.
             // j번 사용 + (i - j)번 사용
-            // i가 3이라면, 1과 2, 2와 1의 경우의 수로 나누기
+            // i가 3이라면, 1과2, 2와 1의 경우의 수로 나누기
             for (int j = 1; j < i; j++) {
                 for (int a : dp[j]) {
                     for (int b : dp[i - j]) {
@@ -47,7 +47,7 @@ class Solution {
             // 작은 i부터 계산했으므로 이것이 최소 사용 횟수다.
             if (dp[i].contains(number)) {
                 return i;
-            }
+            }            
         }
         
         return -1;
