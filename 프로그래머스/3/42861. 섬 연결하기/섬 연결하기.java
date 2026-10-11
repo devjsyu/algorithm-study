@@ -1,73 +1,78 @@
+// MST
+// Kruskal algorithm
 import java.util.*;
 
 class Solution {
     public int solution(int n, int[][] costs) {
-        List<Edge> edges = new ArrayList<>();
-        List<Edge> mst = new ArrayList<>();
-        int totalCost = 0;
-        UnionFind uf = new UnionFind(n);
+        this.parent = new int[n];
+        this.size = new int[n];
+        
+        for (int i = 0; i < n; i++) {
+            parent[i] = i;
+            size[i] = 1;
+        }
+        
+        PriorityQueue<Edge> pq = new PriorityQueue<>(Comparator.comparingInt(Edge::weight));
         
         for (int[] cost : costs) {
-            edges.add(new Edge(cost[0], cost[1], cost[2]));
+            int a = cost[0];
+            int b = cost[1];
+            int weight = cost[2];
+            
+            pq.offer(new Edge(a, b, weight));
         }
-        Collections.sort(edges, (a, b) -> Integer.compare(a.weight(), b.weight()));
         
-        for (Edge edge : edges) {
-            if (uf.union(edge.from(), edge.to())) {
-                mst.add(edge);
-                totalCost += edge.weight();
+        int totalWeight = 0;
+        int mstEdges = 0;
+        while (!pq.isEmpty()) {
+            Edge current = pq.poll();
+            int a = current.from();
+            int b = current.to();
+            int weight = current.weight();
+            
+            if (union(a, b)) {
+                totalWeight += weight;
+                mstEdges++;
                 
-                if (mst.size() == n - 1) {
-                    break;
+                if (mstEdges == n - 1) {
+                    return totalWeight;
                 }
             }
         }
-        
-        return totalCost;
+                
+        return -1;
     }
     
     public record Edge(int from, int to, int weight) {}
     
-    private static class UnionFind {
-        private final int[] parent;
-        private final int[] size;
-        
-        UnionFind(int n) {
-            parent = new int[n];
-            size = new int[n];
-            
-            for (int i = 0; i < n; i++) {
-                parent[i] = i;
-                size[i] = 1;
-            }
+    private int[] parent;
+    private int[] size;
+    
+    private int find(int x) {
+        if (parent[x] != x) {
+            return parent[x] = find(parent[x]);
         }
         
-        int find(int x) {
-            if (parent[x] != x) {
-                return parent[x] = find(parent[x]);
-            }
-            
-            return parent[x];
+        return parent[x];
+    }
+    
+    private boolean union(int a, int b) {
+        int rootA = find(a);
+        int rootB = find(b);
+        
+        if (rootA == rootB) {
+            return false;
         }
         
-        boolean union(int a, int b) {
-            int rootA = find(a);
-            int rootB = find(b);
-            
-            if (rootA == rootB) {
-                return false;
-            }
-            
-            if (size[rootA] < size[rootB]) {
-                int temp = rootA;
-                rootA = rootB;
-                rootB = temp;
-            }
-            
-            parent[rootB] = rootA;
-            size[rootA] += rootB;
-            
-            return true;
+        if (size[rootA] < size[rootB]) {
+            int temp = rootA;
+            rootA = rootB;
+            rootB = temp;
         }
+        
+        parent[rootB] = rootA;
+        size[rootA] += size[rootB];
+        
+        return true;
     }
 }
