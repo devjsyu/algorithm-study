@@ -1,20 +1,22 @@
 /**
 1. State Definition
-dp[i]: i번째 최댓값
+dp[i]: i번째 인덱스까지 범위에 대해 훔칠 수 있는 최댓값
 
 2. Transition
 dp[i] = Math.max(nums[i] + dp[i - 2], dp[i - 1])
 
 3. Base Case
-dp[0] = nums[0]
+dp[i] = nums[0]
 dp[1] = Math.max(nums[0], nums[1])
  */
 class Solution {
-    public int rob(int[] nums) {
+    public int rob(int[] nums) {        
         int n = nums.length;
 
-        if (n < 2) return nums[0];
-        
+        if (n < 2) {
+            return nums[0];
+        }
+
         int[] dp = new int[n];
 
         dp[0] = nums[0];
