@@ -1,20 +1,25 @@
+/**
+- n * m 2차원 배열로 모델링 하기
+- TopDown이 아니라 BottomUp을 통해 최댓값 구하기
+*/
 class Solution {
     public int solution(int[][] triangle) {
         int n = triangle.length;
-        int[][] dp = new int[n][n]; // dp 배열 초기화
         
-        // dp 배열의 맨 아래쪽 라인 초기화
+        int[][] dp = new int[n][n];
+        
+        // initialize base cases
         for (int i = 0; i < n; i++) {
             dp[n - 1][i] = triangle[n - 1][i];
         }
         
-        // 아래쪽 라인부터 올라가면서 dp 배열 채우기
+        // bottom up dp
         for (int i = n - 2; i >= 0; i--) {
-            for (int j = 0; j <= i; j++) {
+            for (int j = i; j >= 0; j--) {
                 dp[i][j] = Math.max(dp[i + 1][j], dp[i + 1][j + 1]) + triangle[i][j];
             }
         }
         
-        return dp[0][0]; // 꼭대기에서의 최댓값 반환
+        return dp[0][0];
     }
 }
