@@ -1,51 +1,43 @@
 /**
 1. State Definition
-dp[i]: 길이 i 문자열에서 나올 수 있는 경우의 수
+주어진 문자열 s에 대해서 dp[i]는 인덱스 i까지 범위에 대한 복호화 가능 개수이다.
 
 2. Transition
-자릿수 조합
-dp[i] = dp[i - 1] + dp[i - 2]
-
-자릿수 조합은 충족하나 digit의 허용범위 밖인 경우 필터링
-- 1의 자리일 경우 1~9만 허용
-- 10의 자리일 경우 1~2만 허용
+dp[i] = 각 조건에 만족할 경우 누적 집계: dp[i - 2], dp[i - 1]
 
 3. Base Case
-dp[0] = 1 // 아무것도 선택하지 않은 유효한 방법이 1개 존재
-dp[1] = 1
-dp[2] = 2
+dp[0] = 0보다 클 경우 1, 아닐 경우 0 
+dp[1] = 0보다 클 경우 dp[0] 1과 십의 자리 경우 1 합산, 아닐 경우 0
  */
 class Solution {
     public int numDecodings(String s) {
         int n = s.length();
 
-        // dp[i]: 앞에서 i개 문자를 해석하는 방법의 수
-        int[] dp = new int[n + 1]; // 1-index
-
-        // Base Cases
-        dp[0] = 1;
-        dp[1] = s.charAt(0) == '0' ? 0 : 1;
-
-        for (int i = 2; i <= n; i++) {
-            
-            // Case 1: 마지막 1자리를 해석
-            int oneDigit = s.charAt(i - 1) - '0';
-
-            if (oneDigit >= 1 && oneDigit <= 9) {
-                dp[i] += dp[i - 1];                
-            }
-
-            // Case 2: 마지막 2자리를 함께 해석
-            int twoDigits = 
-                (s.charAt(i - 2) - '0') * 10 
-                + (s.charAt(i - 1) - '0');
-            
-            if (twoDigits >= 10 && twoDigits <= 26) {
-                dp[i] += dp[i - 2];
-            }
-            
+        if (n < 2) {
+            return s.charAt(0) - '0' > 0 ? 1 : 0; 
         }
 
-        return dp[n];
+        int[] dp = new int[n];
+
+        if (s.charAt(0) == '0') {
+            dp[0] = 0;
+            dp[1] = 0;
+        } else {
+            dp[0] = 1;
+            dp[1] += s.charAt(1) != '0' ? 1 : 0;
+            dp[1] += Integer.parseInt(s.substring(0, 2)) <= 26 ? 1 : 0;
+        }
+
+        for (int i = 2; i < n; i++) {
+            if (s.charAt(i) != '0') {
+                dp[i] += dp[i - 1];            
+            }
+
+            if (s.charAt(i - 1) != '0' && Integer.parseInt(s.substring(i - 1, i + 1)) <= 26) {
+                dp[i] += dp[i - 2];
+            }
+        }
+
+        return dp[n - 1];
     }
 }
