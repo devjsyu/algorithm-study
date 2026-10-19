@@ -1,5 +1,6 @@
-import java.util.*;
-
+/**
+Monotonic Stack
+ */
 class Solution {
     public int carFleet(int target, int[] position, int[] speed) {
         List<Car> cars = new ArrayList<>();
@@ -9,7 +10,6 @@ class Solution {
         Collections.sort(cars, Comparator.comparingInt(Car::position));
 
         Deque<Double> stack = new ArrayDeque<>();
-
         for (Car car : cars) {
             double time = (double) (target - car.position()) / car.speed();
             while (!stack.isEmpty() && stack.peek() <= time) {
