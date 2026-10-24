@@ -1,43 +1,39 @@
-/**
-- Overlapping problems
-- Optimal substructure
-
-Pattern: 0/1 Knapsack (Decision Problem)
-
-1. State Definition
-dp[s]: 지금까지 처리한 숫자들로 합계 s를 만들 수 있는지 여부
-
-2. Transition
-dp[s] = dp[s] || dp[s - num]
-- Not take: dp[s]
-- Take:     dp[s - num]
-
-3. Base Case
-dp[0] = true
- */
 class Solution {
     public boolean canPartition(int[] nums) {
-        int totalSum = 0;
+        int n = nums.length;
+
+        int sum = 0;
         for (int num : nums) {
-            totalSum += num;
+            sum += num;
         }
 
-        if (totalSum % 2 != 0) {
+        if (sum % 2 != 0) {
             return false;
         }
 
-        int target = totalSum / 2;
+        int target = sum / 2;
 
-        // dp[s]: 합계 s를 만들 수 있는지 여부
-        boolean[] dp = new boolean[target + 1];
-        dp[0] = true;
+        // dp[i][t]:
+        // nums[i:]에서 합계 t를 만들 수 있는지 여부
+        boolean[][] dp = new boolean[n + 1][target + 1];
 
-        for (int num : nums) {
-            for (int s = target; s >= num; s--) {
-                dp[s] = dp[s] || dp[s - num];
+        // Base Case
+        dp[n][0] = true;
+
+        // Topological Order
+        for (int i = n - 1; i >= 0; i--) {
+            for (int t = 0; t <= target; t++) {
+
+                // nums[i]를 선택하지 않음
+                dp[i][t] = dp[i + 1][t];
+
+                // nums[i]를 선택함
+                if (t - nums[i] >= 0) {
+                    dp[i][t] = dp[i][t] || dp[i + 1][t - nums[i]];
+                }
             }
         }
 
-        return dp[target];
+        return dp[0][target];
     }
 }
