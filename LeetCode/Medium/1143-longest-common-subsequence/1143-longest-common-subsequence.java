@@ -1,44 +1,50 @@
 /**
-SRTBOT
-- Subproblems:      
-    - dp(i, j)은 A[i:]와 B[j:]의 LCS이다.
+input: double sequence => product of suffix
 
-- Relate:
-    - if (A[i] == B[j]): 1 + dp(i + 1, j + 1) 
-    - else: max{dp(i, j + 1), dp(i + 1, j)}
+- Subproblems
+    - X(i, j): text1[i:]와 text2[j:]의 LCS 길이
+    - 단, 각각 text1[i]와 text2[j]를 포함한다.
 
-- Topological Order:
-    - for i: |A| , ..., 0 (decreasing)
-    - for j: |B| , ..., 0 (decreasing)
-    - A와 B의 input subset 기준이 suffix이기 때문에 역순으로 진행해야 의존하는 상태를 먼저 계산할 수 있다.
+- Recurrence
+    - if (text1[i] == text2[j]) :
+        - yes?  X(i, j) = X(i - 1, j - 1) + 1
+        - no?   X(i, j) = map{X(i - 1, j), X(i, j - 1)}
+
+- Topological Order
+    - for i : n, ..., 0
+        - for j : m, ..., 0
 
 - Base Case
-    - dp[|A|, j] = dp[i, 0]
+    - X(N, M) = 0
 
 - Original Problem
-    - dp[0][0]
+    - max{X(i, j)}
 
 - Time Complexity
     - O(N^2)
  */
 class Solution {
     public int longestCommonSubsequence(String text1, String text2) {
-        int length1 = text1.length();
-        int length2 = text2.length();
+        int n = text1.length();
+        int m = text2.length();
 
-        int[][] dp = new int[length1 + 1][length2 + 1]; // 1-indexed
-        // Base Case: dp[length1][j] = dp[i][length2] = 0
+        int[][] dp = new int[n + 1][m + 1];
 
-        for (int i = length1 - 1; i >= 0; i--) {
-            for (int j = length2 - 1; j >= 0; j--) {
+        int max = 0;
+        for (int i = n - 1; i >= 0; i--) {
+            for (int j = m - 1; j >= 0; j--) {
                 if (text1.charAt(i) == text2.charAt(j)) {
-                    dp[i][j] = 1 + dp[i + 1][j + 1];
+                    dp[i][j] = dp[i + 1][j + 1] + 1;
                 } else {
                     dp[i][j] = Math.max(dp[i + 1][j], dp[i][j + 1]);
+                }
+
+                if (dp[i][j] > max) {
+                    max = dp[i][j];
                 }
             }
         }
 
-        return dp[0][0];
+        return max;
     }
 }
