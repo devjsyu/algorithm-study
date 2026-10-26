@@ -1,5 +1,5 @@
-// MST
-// Kruskal algorithm
+// Kruskal's algorithm
+// Union-Find algorithm
 import java.util.*;
 
 class Solution {
@@ -12,48 +12,43 @@ class Solution {
             size[i] = 1;
         }
         
-        PriorityQueue<Edge> pq = new PriorityQueue<>(Comparator.comparingInt(Edge::weight));
-        
+        PriorityQueue<Edge> pq = new PriorityQueue<>(
+            Comparator.comparingInt(Edge::cost)
+        );
         for (int[] cost : costs) {
-            int a = cost[0];
-            int b = cost[1];
-            int weight = cost[2];
-            
-            pq.offer(new Edge(a, b, weight));
+            pq.offer(new Edge(cost[0], cost[1], cost[2]));
         }
         
-        int totalWeight = 0;
         int mstEdges = 0;
+        int totalCost = 0;
+        
         while (!pq.isEmpty()) {
             Edge current = pq.poll();
-            int a = current.from();
-            int b = current.to();
-            int weight = current.weight();
+            int a = current.a();
+            int b = current.b();
+            int cost = current.cost();
             
             if (union(a, b)) {
-                totalWeight += weight;
+                totalCost += cost;
                 mstEdges++;
                 
-                if (mstEdges == n - 1) {
-                    return totalWeight;
+                if (n == mstEdges - 1) {
+                    return totalCost;
                 }
             }
         }
-                
-        return -1;
+        
+        return totalCost;
     }
     
-    public record Edge(int from, int to, int weight) {}
-    
-    private int[] parent;
-    private int[] size;
+    private static int[] parent;
+    private static int[] size;
     
     private int find(int x) {
-        if (parent[x] != x) {
-            return parent[x] = find(parent[x]);
+        if (parent[x] == x) {
+            return x;
         }
-        
-        return parent[x];
+        return parent[x] = find(parent[x]);
     }
     
     private boolean union(int a, int b) {
@@ -75,4 +70,6 @@ class Solution {
         
         return true;
     }
+    
+    public record Edge(int a, int b, int cost) {}
 }
