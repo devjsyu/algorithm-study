@@ -1,7 +1,7 @@
 class Solution {
     public long solution(long n) {
-        long sqrt = (long) Math.sqrt(n);
+        double sqrt = Math.sqrt(n);
         
-        return n == sqrt * sqrt ? (sqrt + 1) * (sqrt + 1) : -1;
+        return (long) sqrt * sqrt == n ? ((long) sqrt + 1) * ((long) sqrt + 1) : -1;
     }
 }
