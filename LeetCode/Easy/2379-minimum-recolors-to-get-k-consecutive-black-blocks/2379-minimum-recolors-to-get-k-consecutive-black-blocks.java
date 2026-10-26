@@ -1,31 +1,31 @@
-/**
-Fixed-size Sliding Window
- */
+// Fixed-size Sliding Window
 class Solution {
     public int minimumRecolors(String blocks, int k) {
-        // build the first window
-        int recolorCount = 0;
+        // build the window
+        int count = 0;
         for (int i = 0; i < k; i++) {
             if (blocks.charAt(i) == 'W') {
-                recolorCount++;
+                count++;
             }
         }
 
-        int min = recolorCount;
+        int min = count;
 
         // slide the window
         for (int i = k; i < blocks.length(); i++) {
-            // incoming
+            // outgoing
             if (blocks.charAt(i) == 'W') {
-                recolorCount++;
-            }
-            
-            // outcoming
-            if (blocks.charAt(i - k) == 'W') {
-                recolorCount--;
+                count++;
             }
 
-            min = Math.min(min, recolorCount);
+            // incoming
+            if (blocks.charAt(i - k) == 'W') {
+                count--;
+            }
+
+            if (count < min) {
+                min = count;
+            }
         }
 
         return min;
