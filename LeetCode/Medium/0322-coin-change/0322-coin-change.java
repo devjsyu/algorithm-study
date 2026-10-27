@@ -1,40 +1,32 @@
 /**
-1. State Definition
-dp[i]: amount i를 만들 수 있는 조합 최솟값
+State Definition
+dp[i]: amount i를 만드는 가장 적은 동전 개수 조합
 
-2. Transition
-dp[i]는 coins 배열 원소에 대해 순회했을 때 dp[i - coins[j]] + 1의 최솟값이다.
+Transition
+dp[i] = min{1 + dp[i - coin] | coin ∈ coins}
 
-3. Base Case
+Base Case
 dp[0] = 0
  */
+import java.util.*;
+
 class Solution {
     public int coinChange(int[] coins, int amount) {
         int INF = amount + 1;
-        int[] dp = new int[amount + 1]; // 1-indexed
+        int[] dp = new int[amount + 1];
         Arrays.fill(dp, INF);
-
         dp[0] = 0;
 
         for (int i = 1; i <= amount; i++) {
-            int min = INF;
-            for (int j = 0; j < coins.length; j++) {
-                if (coins[j] > i) {
+            for (int coin : coins) {
+                if (i - coin < 0) {
                     continue;
                 }
 
-                int index = i - coins[j];
-                if (dp[index] < INF) {
-                    int temp = dp[index] + 1;
-                    if (min > temp) {
-                        min = temp;
-                    }
-                }
+                dp[i] = Math.min(dp[i], dp[i - coin] + 1);
             }
-            dp[i] = min;
         }
 
         return dp[amount] == INF ? -1 : dp[amount];
     }
-
 }
