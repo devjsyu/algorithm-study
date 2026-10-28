@@ -1,34 +1,37 @@
+/**
+1번 풀이: 문자 그대로 Queue와 Stack을 그대로 구현하기
+ */
+import java.util.*;
+
 class Solution {
     public int countStudents(int[] students, int[] sandwiches) {
+        int n = sandwiches.length;
+        
         Deque<Integer> stack = new ArrayDeque<>();
-        for (int i = sandwiches.length - 1; i >= 0; i--) {
+        for (int i = n - 1; i >= 0; i--) {
             stack.push(sandwiches[i]);
         }
 
         Queue<Integer> queue = new ArrayDeque<>();
-        for (int i = 0; i < students.length; i++) {
+        for (int i = 0; i < n; i++) {
             queue.offer(students[i]);
         }
 
+        int rejected = 0;
         while (!queue.isEmpty()) {
-            // unable to eat case
-            if (!stack.isEmpty() 
-            && ((stack.peek() == 0 && !queue.contains(Integer.valueOf(0))) 
-            || (stack.peek() == 1 && !queue.contains(Integer.valueOf(1))))) {
-                return queue.size();
-            }
-
-            // matched case
-            if (!stack.isEmpty() && stack.peek() == queue.peek()) {
+            if (stack.peek() == queue.peek()) {
                 stack.pop();
                 queue.poll();
-            } 
-    
-            // mismatched case
-            if (!stack.isEmpty() && stack.peek() != queue.peek()) {
-                int mismatched = queue.poll();
-                queue.offer(mismatched);
-            } 
+                rejected = 0;
+            } else {
+                int refused = queue.poll();
+                queue.offer(refused);
+                rejected++;
+
+                if (rejected == queue.size()) {
+                    return rejected;
+                }
+            }
         }
 
         return 0;
