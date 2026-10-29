@@ -1,29 +1,26 @@
 /**
-Naive Approach                  => O(N^2) => TLE
-(Increasing) Monotonic Stack    => O(N)
+Pattern: Greedy / Running Minimum
+
+Key Insight:
+- 현재 날짜에 매도한다면, 이전 최저가에 매수하는 것이 최적이다.
+- 따라서 과거 모든 가격을 저장할 필요가 없다.
+
+Algorithm:
+- 각 날짜마다 최저 가격과 최대 이익을 갱신한다.
+
+Time Complexity: O(N)
+Space Complexity: O(1)
  */
 class Solution {
     public int maxProfit(int[] prices) {
-        Deque<Integer> stack = new ArrayDeque<>();
-        
-        int n = prices.length;        
-        int maxMargin = 0;
+        int minPrice = prices[0];
+        int maxProfit = 0;
 
-        for (int i = 0; i < n; i++) {
-            while (!stack.isEmpty() && prices[stack.peek()] > prices[i]) {
-                int popped = stack.pop();
-                if (stack.isEmpty()) continue;
-                int temp = prices[popped] - prices[stack.getLast()];
-                maxMargin = Math.max(maxMargin, temp);
-            }
-            
-            stack.push(i);
+        for (int price : prices) {
+            minPrice = Math.min(minPrice, price);
+            maxProfit = Math.max(maxProfit, price - minPrice);
         }
 
-        if (!stack.isEmpty()) {
-            maxMargin = Math.max(maxMargin, prices[stack.getFirst()] - prices[stack.getLast()]);
-        }
-
-        return maxMargin;
+        return maxProfit;
     }
 }
