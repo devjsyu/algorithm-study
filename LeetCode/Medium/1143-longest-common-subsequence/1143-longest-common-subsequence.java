@@ -1,26 +1,22 @@
 /**
-input: double sequence => product of suffix
+Subproblem
+X(i, j): 두 문자열 suffix 범위 i, j에 대한 LCS의 길이 (최댓값)
 
-- Subproblems
-    - X(i, j): text1[i:]와 text2[j:]의 LCS 길이
+Recurrence
+X(i, j) = text1[i] == text2[j] ? 
+            X(i + 1, j + 1) + 1 :
+            max{X(i + 1, j), X(i, j + 1)}
 
-- Recurrence
-    - if (text1[i] == text2[j]) :
-        - yes?  X(i, j) = X(i + 1, j + 1) + 1
-        - no?   X(i, j) = max{X(i + 1, j), X(i, j + 1)}
+Topological Order
+for i : n - 1, ..., 0
+for j : m - 1, ..., 0
 
-- Topological Order
-    - for i : n - 1, ..., 0
-        - for j : m - 1, ..., 0
+Base Case
+X(n, j) = 0
+X(i, m) = 0
 
-- Base Case
-    - X(N, M) = 0
-
-- Original Problem
-    - X(0, 0)
-
-- Time Complexity
-    - O(N * M)
+Original Problem
+X(0, 0)
  */
 class Solution {
     public int longestCommonSubsequence(String text1, String text2) {
