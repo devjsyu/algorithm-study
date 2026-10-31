@@ -1,31 +1,47 @@
-import java.util.*;
+/**
+Subproblem
+i번째날 ~~ 하는 선택을 했을 때의 이익 최댓값
+hold[i] : 보유
+rest[i] : 보유 X, 매도 X
+sold[i] : 매도
 
+Recurrence
+hold[i] = max{hold[i - 1], rest[i - 1] - prices[i]}
+rest[i] = max{hold[i - 1] + prices[i], rest[i - 1]}
+sold[i] = hold[i - 1] + prices[i]
+
+Topological Order
+for i : 0, ..., n
+
+Base Case
+hold[0] = -prices[0]
+rest[0] = 0
+sold[0] = -INF
+
+Original Problem
+max{sold[n - 1], rest[n - 1]}
+
+Time Complexity
+O(N)
+ */
 class Solution {
     public int maxProfit(int[] prices) {
         int n = prices.length;
 
         int[] hold = new int[n];
-        int[] sold = new int[n];
         int[] rest = new int[n];
+        int[] sold = new int[n];
 
-        // Base Case
         hold[0] = -prices[0];
-        sold[0] = Integer.MIN_VALUE;
         rest[0] = 0;
+        sold[0] = Integer.MIN_VALUE;
 
-        // Topological Order
         for (int i = 1; i < n; i++) {
-            // 주식을 계속 보유하거나 오늘 매수
             hold[i] = Math.max(hold[i - 1], rest[i - 1] - prices[i]);
-
-            // 오늘 주식 매도
+            rest[i] = Math.max(hold[i - 1] + prices[i - 1], rest[i - 1]);
             sold[i] = hold[i - 1] + prices[i];
-
-            // 계속 쉬거나 매도 다음 날 휴식
-            rest[i] = Math.max(rest[i - 1], sold[i - 1]);
         }
 
-        // 마지막 날에는 주식을 보유하지 않는 것이 최적
-        return Math.max(sold[n - 1], rest[n - 1]);
+        return Math.max(rest[n - 1], sold[n - 1]);
     }
 }
