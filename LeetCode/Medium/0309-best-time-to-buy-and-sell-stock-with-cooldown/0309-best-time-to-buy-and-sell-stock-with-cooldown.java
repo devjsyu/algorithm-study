@@ -7,7 +7,7 @@ sold[i] : 매도
 
 Recurrence
 hold[i] = max{hold[i - 1], rest[i - 1] - prices[i]}
-rest[i] = max{hold[i - 1] + prices[i], rest[i - 1]}
+rest[i] = max{hold[i - 1] + prices[i - 1], rest[i - 1]}
 sold[i] = hold[i - 1] + prices[i]
 
 Topological Order
@@ -38,7 +38,7 @@ class Solution {
 
         for (int i = 1; i < n; i++) {
             hold[i] = Math.max(hold[i - 1], rest[i - 1] - prices[i]);
-            rest[i] = Math.max(hold[i - 1] + prices[i - 1], rest[i - 1]);
+            rest[i] = Math.max(sold[i - 1], rest[i - 1]);
             sold[i] = hold[i - 1] + prices[i];
         }
 
