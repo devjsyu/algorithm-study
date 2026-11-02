@@ -1,25 +1,23 @@
 /**
-- Subproblems
-    - L(i) = prefix subset nums[:i] 범위에서 nums[i]로 끝나는 LIS 길이
-    - C(i) = prefix subset nums[:i] 범위에서 nums[i]로 끝나는 LIS 개수
+State Definition
+- LIS 길이에 대한 상태관리
+- LIS 개수에 대한 상태관리
 
-- Relate
-    - L(i) = 1 + max{L(j) | 0 <= j < i} (nums[j] < nums[i])
-    - C(i) = sum{C(j) | 0 <= j < i, max{L(j) + 1}를 만족하는 j} (nums[j] < nums[i])
+- length[i]: nums[i:] 수열에 대한 LIS 길이
+- count[i] : nums[i:] 수열에 대한 LIS 개수
 
-- Topological Order
-    - for i : 0, ..., n - 1
-        for j : 0, ..., i - 1
 
-- Base Case
-    - L(0) = 1
-    - C(0) = 1
+Transition
+length[i] = nums[i] < nums[j] ? length[i + 1] + 1 : length[i + 1] (단, i < j < n)
+count[i] = 동일 length[i]하면 => += count[i + 1]
+           length[i] 갱신되면 => = count[i + 1]
 
-- Original Problem
-    - C(n - 1)
+Base Case
+length[n - 1] = 1
+count[n - 1] = 1
 
-- Time Complexity
-    - O(N^2)
+Original Problem
+전체 범위에 대해 LCS 최댓값 개수를 구하기 위해 length[i]가 LCS 최댓값인 경우의 i에 대해 count[i]를 누적 집계하여 반환한다.  
  */
 import java.util.*;
 
@@ -29,25 +27,24 @@ class Solution {
 
         int[] length = new int[n];
         int[] count = new int[n];
-
         Arrays.fill(length, 1);
         Arrays.fill(count, 1);
 
-        int maxLength = 1;
-        for (int i = 0; i < n; i++) {
-            for (int j = 0; j < i; j++) {
-                // LIS 조건 미충족일 경우 필터링
-                if (nums[j] >= nums[i]) {
+        int maxLength = 0;
+        for (int i = n - 1; i >= 0; i--) {
+            for (int j = i + 1; j < n; j++) {
+                // 필터링: LCS가 아닌 경우
+                if (nums[i] >= nums[j]) {
                     continue;
                 }
 
-                // LIS 상태 갱신될 경우
+                // LCS가 갱신된 경우
                 if (1 + length[j] > length[i]) {
                     length[i] = 1 + length[j];
                     count[i] = count[j];
                 }
 
-                // LIS 상태 유지될 경우
+                // LCS가 유지된 경우
                 else if (1 + length[j] == length[i]) {
                     count[i] += count[j];
                 }
@@ -58,7 +55,7 @@ class Solution {
 
         int answer = 0;
         for (int i = 0; i < n; i++) {
-            if (maxLength == length[i]) {
+            if (length[i] == maxLength) {
                 answer += count[i];
             }
         }
