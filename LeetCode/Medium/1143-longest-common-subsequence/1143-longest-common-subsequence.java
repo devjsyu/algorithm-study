@@ -1,22 +1,16 @@
 /**
-Subproblem
-X(i, j): 두 문자열 suffix 범위 i, j에 대한 LCS의 길이 (최댓값)
+State Definition
+dp[i, j]: text1[i:n)와 text2[j:m) 문자열 간의 LCS 길이
 
-Recurrence
-X(i, j) = text1[i] == text2[j] ? 
-            X(i + 1, j + 1) + 1 :
-            max{X(i + 1, j), X(i, j + 1)}
-
-Topological Order
-for i : n - 1, ..., 0
-for j : m - 1, ..., 0
+Transition
+dp[i, j] = 
+    if (text1[i] == text2[j]) :
+        yes => dp[i + 1, j + 1] + 1
+        no  => max{dp[i + 1, j], dp[i, j + 1]}
 
 Base Case
-X(n, j) = 0
-X(i, m) = 0
-
-Original Problem
-X(0, 0)
+dp[n, j] = 0
+dp[i, m] = 0
  */
 class Solution {
     public int longestCommonSubsequence(String text1, String text2) {
@@ -30,7 +24,7 @@ class Solution {
                 if (text1.charAt(i) == text2.charAt(j)) {
                     dp[i][j] = dp[i + 1][j + 1] + 1;
                 } else {
-                    dp[i][j] = Math.max(dp[i + 1][j], dp[i][j + 1]);
+                    dp[i][j] = Math.max(dp[i][j + 1], dp[i + 1][j]);
                 }
             }
         }
