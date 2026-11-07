@@ -1,44 +1,24 @@
 /**
-Suffix DP
-
-State Definition
-X(i, j): t[j:] 문자열에 대해 s[i:]가 subsequence인지 여부 
-
-Transition
-X(i, j) = X(i + 1, j + 1), if (s[i] = t[j])
-        = X(i, j + 1), otherwise
-
-Base Case
-X(n, m) = true
-
-Original Problem
-X(0, 0)
+Why Two Pointers?
+- The brute force approach needs repeatedly scanning the same sequence with nested loops, which leads to O(N^2) time complexity.
+- The certain condition of this problem(whether s[i] is matched with t[j]) lets narrowing the scope of searching safely without the possibility of missing the answer. 
+- The two pointers approach, however, can turn it into the linear search, which is O(N) time complexity.
  */
 class Solution {
     public boolean isSubsequence(String s, String t) {
-        if (s.isEmpty()) {
-            return true;
-        }
-        
         int n = s.length();
         int m = t.length();
 
-        boolean[][] dp = new boolean[n + 1][m + 1];
-        dp[n][m] = true;
-        for (int j = 0; j < m; j++) {
-            dp[n][j] = true;
-        }
+        int targetIndex = 0;
+        int searchIndex = 0;
 
-        for (int i = n - 1; i >= 0; i--) {
-            for (int j = m - 1; j >= 0; j--) {
-                if (s.charAt(i) == t.charAt(j)) {
-                    dp[i][j] = dp[i + 1][j + 1]; // dependent on the previous state
-                } else {
-                    dp[i][j] = dp[i][j + 1]; // narrowing the scope of searching
-                }
+        while (targetIndex < n && searchIndex < m) {
+            if (s.charAt(targetIndex) == t.charAt(searchIndex)) {
+                targetIndex++;
             }
+            searchIndex++;
         }
 
-        return dp[0][0];
+        return targetIndex == n; 
     }
 }
